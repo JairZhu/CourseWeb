@@ -1,6 +1,8 @@
 <template>
   <div>
-    在线答疑
+    <el-row type="flex" justify="center" style="margin-top: 30px">
+      在线答疑
+    </el-row>
   </div>
 </template>
 
