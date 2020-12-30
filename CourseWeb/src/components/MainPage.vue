@@ -24,6 +24,7 @@
               <el-form-item>
                 <el-button type="success" icon="el-icon-check" @click="submitForm('ruleForm')" circle></el-button>
                 <el-button type="danger" icon="el-icon-close" @click="resetForm('ruleForm')" circle></el-button>
+                <el-button type="primary" icon="el-icon-plus" @click="loginForm('ruleForm')" circle></el-button>
               </el-form-item>
             </el-form>
           </div>
@@ -131,6 +132,16 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
+    },
+    loginForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert('submit!');
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
     }
   }
 }
