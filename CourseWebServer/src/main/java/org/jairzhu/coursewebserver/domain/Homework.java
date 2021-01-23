@@ -10,6 +10,7 @@ public class Homework {
     private String writer;
     private Date time;
     private int score;
+    private String assignmentTitle;
 
     @Override
     public String toString() {
@@ -20,6 +21,7 @@ public class Homework {
                 ", writer='" + writer + '\'' +
                 ", time=" + time +
                 ", score=" + score +
+                ", assignmentTitle='" + assignmentTitle + '\'' +
                 '}';
     }
 
@@ -28,12 +30,12 @@ public class Homework {
         if (this == o) return true;
         if (!(o instanceof Homework)) return false;
         Homework homework = (Homework) o;
-        return score == homework.score && Objects.equals(title, homework.title) && Objects.equals(content, homework.content) && Objects.equals(fileName, homework.fileName) && Objects.equals(writer, homework.writer) && Objects.equals(time, homework.time);
+        return score == homework.score && Objects.equals(title, homework.title) && Objects.equals(content, homework.content) && Objects.equals(fileName, homework.fileName) && Objects.equals(writer, homework.writer) && Objects.equals(time, homework.time) && Objects.equals(assignmentTitle, homework.assignmentTitle);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, content, fileName, writer, time, score);
+        return Objects.hash(title, content, fileName, writer, time, score, assignmentTitle);
     }
 
     public String getTitle() {
@@ -82,5 +84,13 @@ public class Homework {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public String getAssignmentTitle() {
+        return assignmentTitle;
+    }
+
+    public void setAssignmentTitle(String assignmentTitle) {
+        this.assignmentTitle = assignmentTitle;
     }
 }

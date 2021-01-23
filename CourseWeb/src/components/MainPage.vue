@@ -5,9 +5,19 @@
         <el-card style="margin-bottom: 10px">
           <div slot="header">
             <i class="el-icon-user"></i>
-            <span style="margin-left: 5px;">用户登录</span>
+            <span v-if="isLogin" style="margin-left: 5px;">个人中心</span>
+            <span v-else style="margin-left: 5px;">用户登录</span>
           </div>
-          <div>
+          <div v-if="isLogin">
+            <div style="text-align: center">
+              <el-image v-if="isTeacher" :src="require('@/assets/teacher.png')" :fit="'contain'" style="width: 150px; height: 150px;"></el-image>
+              <el-image v-else :src="require('@/assets/student.png')" :fit="'contain'" style="width: 150px; height: 150px;"></el-image>
+            </div>
+            <div style="text-align: center; margin-top: 10px">
+              <el-button type="danger" @click="userLogout" round>退出</el-button>
+            </div>
+          </div>
+          <div v-else>
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="70px" class="demo-ruleForm">
               <el-form-item label="用户名" prop="name">
                 <el-input v-model="ruleForm.name"></el-input>
@@ -45,9 +55,9 @@
             <i class="el-icon-news"></i>
             <span style="margin-left: 5px;">新闻</span>
           </div>
-          <div v-for="i in 8" :key="i" style="margin-bottom: 18px">
+          <div v-for="i in news" :key="i" style="margin-bottom: 18px">
             <i class="el-icon-link"></i>
-            {{'新闻' + i}}
+            <el-button type="text" @click="getDialogInfo(i)">{{i.title}}</el-button>
           </div>
         </el-card>
         <el-card>
@@ -55,9 +65,9 @@
             <i class="el-icon-bell"></i>
             <span style="margin-left: 5px;">通知</span>
           </div>
-          <div v-for="i in 8" :key="i" style="margin-bottom: 18px">
+          <div v-for="i in notifications" :key="i" style="margin-bottom: 18px">
             <i class="el-icon-position"></i>
-            {{'通知' + i}}
+            <el-button type="text" @click="getDialogInfo(i)">{{i.title}}</el-button>
           </div>
         </el-card>
       </el-col>
@@ -67,9 +77,9 @@
             <i class="el-icon-edit-outline"></i>
             <span style="margin-left: 5px;">最新作业列表</span>
           </div>
-          <div v-for="i in homework" :key="i" style="margin-bottom: 18px">
+          <div v-for="i in assignments" :key="i" style="margin-bottom: 18px">
             <i class="el-icon-notebook-1"></i>
-            {{'作业' + i}}
+            <el-button type="text" @click="getDrawerInfo(i)">{{i.title}}</el-button>
           </div>
         </el-card>
         <el-card>
@@ -77,13 +87,29 @@
             <i class="el-icon-document-copy"></i>
             <span style="margin-left: 5px">课件下载</span>
           </div>
-          <div v-for="i in courseWare" style="margin-bottom: 18px">
+          <div v-for="i in ppts" style="margin-bottom: 18px">
             <i class="el-icon-tickets"></i>
-            <a :href="'static/ppt/' + i" :download="i">{{i}}</a>
+            <a :href="'static/ppt/' + i.title" :download="i.title">{{i.title}}</a>
           </div>
         </el-card>
       </el-col>
     </el-row>
+    <el-drawer
+      :title="drawerTitle"
+      :visible.sync="drawerVisible"
+      :direction="drawerDirection">
+      <div style="margin-left: 20px; margin-right: 20px;">
+        <span style="line-height: initial; white-space: pre-wrap">{{drawerContent}}</span>
+      </div>
+    </el-drawer>
+    <el-dialog
+      :title="dialogTitle"
+      :visible.sync="dialogVisible"
+      width="60%">
+      <div style="margin-left: 20px; margin-right: 20px;">
+        <span style="line-height: initial; white-space: pre-wrap">{{dialogContent}}</span>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -92,6 +118,15 @@ export default {
   name: "MainPage",
   data() {
     return {
+      isLogin: this.isLogin,
+      isTeacher: this.isTeacher,
+      drawerVisible: false,
+      drawerDirection: 'ltr',
+      drawerTitle: null,
+      drawerContent: null,
+      dialogTitle: null,
+      dialogVisible: false,
+      dialogContent: null,
       ruleForm: {
         name: '',
         password: '',
@@ -108,18 +143,30 @@ export default {
           { required: true, message: '请选择类型', trigger: 'change' }
         ],
       },
-      courseWare: ['0_Guide.ppt', '1_Overview.ppt', '2_Architectures_In_Context.ppt', '3_Basic_Concepts.ppt',
-        '4_Architectural Views.ppt', '5_ca.ppt', '5_ea.ppt', '5_ia.ppt', '6_Design the Arch.ppt', '6_Pattern and Style I.ppt',
-        '6_Pattern and Style II.ppt', '7_Distributed Architectures.ppt', '7_Frameworks.ppt', '7_Microservices.ptt',
-        '7_MVC, MVP and MVVM A Comparison of Architectural Patterns.ppt', '7_Serverless architecture.ppt',
-        '7_Service Architectures.ppt', '7_Service Oriented Architecture.ppt', '8_Quality Attributes of Arch.-availability.ppt',
-        '8_Quality Attributes of Arch.-modifiability & security.ppt', '8_Quality Attributes of Arch.-performance.ppt',
-        '8_Quality Attributes of Arch.-testability & usability.ppt', '8_Quality Attributes.ppt', '9_OO Design Principles.ppt',
-        '9_Refactorhelloworld.ppt', '10_Design pattern.ppt', '11_1 Scaling up.ppt', '11_patterns-frameworks-middleware.ppt'],
-      homework: [1,2,3,4,5],
+      news: [],
+      notifications: [],
+      ppts: [],
+      assignments: [],
     };
   },
   methods: {
+    userLogout() {
+      console.log('用户退出登录');
+      this.isLogin = false;
+    },
+    getDrawerInfo(item) {
+      this.drawerVisible = true;
+      this.drawerTitle = item.title;
+      this.drawerDirection = 'ltr';
+      this.drawerContent = item.content;
+      console.log(this.drawerContent);
+    },
+    getDialogInfo(item) {
+      this.dialogVisible = true;
+      this.dialogTitle = item.title;
+      this.dialogContent = item.content;
+      console.log(this.dialogContent)
+    },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -129,6 +176,7 @@ export default {
           return false;
         }
       });
+      this.isLogin = true;
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
@@ -143,10 +191,32 @@ export default {
         }
       });
     }
+  },
+  created() {
+    this.$http.get("http://localhost:8090/getPPTs").then(result => {
+      this.ppts = result.data;
+      // console.log(result.data);
+    });
+    this.$http.get("http://localhost:8090/getNews").then(result => {
+      this.news = result.data;
+      // console.log(this.news[0].content);
+    });
+    this.$http.get("http://localhost:8090/getNotifications").then(result => {
+      this.notifications = result.data;
+      // console.log(this.notifications[0].content);
+    });
+    this.$http.get("http://localhost:8090/getAssignments").then(result => {
+      this.assignments = result.data;
+    });
   }
 }
 </script>
 
-<style scoped>
-
+<style >
+.el-drawer:focus {
+  outline: none;
+}
+.el-drawer__header span:focus {
+  outline: 0;
+}
 </style>
