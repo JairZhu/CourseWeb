@@ -1,12 +1,11 @@
 package org.jairzhu.coursewebserver.controller;
 
 import org.jairzhu.coursewebserver.domain.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +14,8 @@ import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @EnableAutoConfiguration
 public class CourseWebController {
+
+    private final Logger logger = LoggerFactory.getLogger(CourseWebController.class);
 
     @RequestMapping(value = "getNews")
     @ResponseBody
@@ -38,5 +39,24 @@ public class CourseWebController {
     @ResponseBody
     public List<Assignment> findAllAssignment() {
         return Common.courseWebMapper.findAllAssignment();
+    }
+
+    @PostMapping(value = "postUser")
+    @ResponseBody
+    public boolean userLogin(@RequestBody User user) {
+        List<User> userList = Common.courseWebMapper.findAllUsers();
+        return userList.contains(user);
+    }
+
+    @PostMapping(value = "saveUser")
+    @ResponseBody
+    public boolean saveUser(@RequestBody User user) {
+        try {
+            Common.courseWebMapper.saveUser(user);
+            return true;
+        } catch (Exception exception) {
+            logger.info(exception.toString());
+            return false;
+        }
     }
 }

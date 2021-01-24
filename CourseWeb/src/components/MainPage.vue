@@ -2,22 +2,28 @@
   <div>
     <el-row type="flex" justify="space-around" style="margin-top: 30px">
       <el-col :span="6">
-        <el-card style="margin-bottom: 10px">
+        <el-card v-if="$store.state.isLogin" style="margin-bottom: 10px">
           <div slot="header">
             <i class="el-icon-user"></i>
-            <span v-if="isLogin" style="margin-left: 5px;">个人中心</span>
-            <span v-else style="margin-left: 5px;">用户登录</span>
+            <span style="margin-left: 5px;">个人中心</span>
           </div>
-          <div v-if="isLogin">
+          <div>
             <div style="text-align: center">
-              <el-image v-if="isTeacher" :src="require('@/assets/teacher.png')" :fit="'contain'" style="width: 150px; height: 150px;"></el-image>
+              <el-image v-if="$store.state.isTeacher" :src="require('@/assets/teacher.png')" :fit="'contain'" style="width: 150px; height: 150px;"></el-image>
               <el-image v-else :src="require('@/assets/student.png')" :fit="'contain'" style="width: 150px; height: 150px;"></el-image>
-            </div>
-            <div style="text-align: center; margin-top: 10px">
-              <el-button type="danger" @click="userLogout" round>退出</el-button>
+              <br>
+              <span>{{$store.state.user.name}}</span>
+              <br>
+              <el-button type="danger" @click="userLogout" style="margin-top: 10px" round>退出</el-button>
             </div>
           </div>
-          <div v-else>
+        </el-card>
+        <el-card v-else style="margin-bottom: 10px">
+          <div slot="header">
+            <i class="el-icon-user"></i>
+            <span style="margin-left: 5px;">用户登录</span>
+          </div>
+          <div>
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="70px" class="demo-ruleForm">
               <el-form-item label="用户名" prop="name">
                 <el-input v-model="ruleForm.name"></el-input>
@@ -27,8 +33,8 @@
               </el-form-item>
               <el-form-item label="类型" prop="type">
                 <el-select v-model="ruleForm.type" placeholder="请选择类型">
-                  <el-option label="学生" value="student"></el-option>
-                  <el-option label="老师" value="teacher"></el-option>
+                  <el-option label="学生" value="false"></el-option>
+                  <el-option label="老师" value="true"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item>
@@ -118,8 +124,6 @@ export default {
   name: "MainPage",
   data() {
     return {
-      isLogin: this.isLogin,
-      isTeacher: this.isTeacher,
       drawerVisible: false,
       drawerDirection: 'ltr',
       drawerTitle: null,
@@ -130,7 +134,7 @@ export default {
       ruleForm: {
         name: '',
         password: '',
-        type: '',
+        type: null,
       },
       rules: {
         name: [
@@ -151,32 +155,63 @@ export default {
   },
   methods: {
     userLogout() {
-      console.log('用户退出登录');
-      this.isLogin = false;
+      this.$store.commit('setIsLogin', false);
+      this.$store.commit('setTeacher', false);
+      this.$store.commit('setUser', null);
+      localStorage.setItem("isLogin", JSON.stringify(false));
+      localStorage.setItem("isTeacher", JSON.stringify(false));
+      localStorage.setItem("user", JSON.stringify(null));
     },
     getDrawerInfo(item) {
       this.drawerVisible = true;
       this.drawerTitle = item.title;
       this.drawerDirection = 'ltr';
       this.drawerContent = item.content;
-      console.log(this.drawerContent);
+      // console.log(this.drawerContent);
     },
     getDialogInfo(item) {
       this.dialogVisible = true;
       this.dialogTitle = item.title;
       this.dialogContent = item.content;
-      console.log(this.dialogContent)
+      // console.log(this.dialogContent)
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!');
+          // console.log(this.ruleForm);
+          this.$http.post("http://localhost:8090/postUser", this.ruleForm).then(result => {
+            if (result.data) {
+              this.$store.commit('setIsLogin', true);
+              this.$store.commit('setTeacher', (this.ruleForm.type === 'true'));
+              this.$store.commit('setUser', this.ruleForm);
+              localStorage.setItem("isLogin", JSON.stringify(this.$store.state.isLogin));
+              localStorage.setItem("isTeacher", JSON.stringify(this.$store.state.isTeacher));
+              localStorage.setItem("user", JSON.stringify(this.$store.state.user));
+              this.$notify({
+                title: '登录成功',
+                message: this.$store.state.user.name + '，欢迎！',
+                type: 'success',
+              });
+            } else {
+              this.$store.commit('setIsLogin', false);
+              this.$store.commit('setTeacher', false);
+              this.$store.commit('setUser', null);
+              this.$notify.error({
+                title: '登录失败',
+                message: '账号、密码或类型错误！',
+              });
+            }
+          })
         } else {
-          console.log('error submit!!');
-          return false;
+          this.$store.commit('setIsLogin', false);
+          this.$store.commit('setTeacher', false);
+          this.$store.commit('setUser', null);
+          this.$notify.error({
+            title: '登录失败',
+            message: '请正确填写信息！',
+          });
         }
       });
-      this.isLogin = true;
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
@@ -184,10 +219,37 @@ export default {
     loginForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!');
+          this.$http.post("http://localhost:8090/saveUser", this.ruleForm).then(result => {
+            if (result.data) {
+              this.$store.commit('setIsLogin', true);
+              this.$store.commit('setTeacher', (this.ruleForm.type === 'true'));
+              this.$store.commit('setUser', this.ruleForm);
+              localStorage.setItem("isLogin", JSON.stringify(this.$store.state.isLogin));
+              localStorage.setItem("isTeacher", JSON.stringify(this.$store.state.isTeacher));
+              localStorage.setItem("user", JSON.stringify(this.$store.state.user));
+              this.$notify({
+                title: '注册成功',
+                message: this.$store.state.user.name + '，欢迎！',
+                type: 'success',
+              })
+            } else {
+              this.$store.commit('setIsLogin', false);
+              this.$store.commit('setTeacher', false);
+              this.$store.commit('setUser', null);
+              this.$notify.error({
+                title: '注册失败',
+                message: '用户已存在！',
+              })
+            }
+          });
         } else {
-          console.log('error submit!!');
-          return false;
+          this.$store.commit('setIsLogin', false);
+          this.$store.commit('setTeacher', false);
+          this.$store.commit('setUser', null);
+          this.$notify.error({
+            title: '注册失败',
+            message: '请正确填写信息！',
+          })
         }
       });
     }
@@ -208,6 +270,9 @@ export default {
     this.$http.get("http://localhost:8090/getAssignments").then(result => {
       this.assignments = result.data;
     });
+    this.$store.commit('setIsLogin', JSON.parse(localStorage.getItem("isLogin")));
+    this.$store.commit('setTeacher', JSON.parse(localStorage.getItem("isTeacher")));
+    this.$store.commit('setUser', JSON.parse(localStorage.getItem("user")));
   }
 }
 </script>

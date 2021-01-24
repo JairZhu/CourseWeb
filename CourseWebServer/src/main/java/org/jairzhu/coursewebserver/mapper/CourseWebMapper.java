@@ -1,10 +1,7 @@
 package org.jairzhu.coursewebserver.mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.jairzhu.coursewebserver.domain.Assignment;
-import org.jairzhu.coursewebserver.domain.News;
-import org.jairzhu.coursewebserver.domain.Notification;
-import org.jairzhu.coursewebserver.domain.PPT;
+import org.jairzhu.coursewebserver.domain.*;
 
 import java.util.List;
 
@@ -21,4 +18,10 @@ public interface CourseWebMapper {
 
     @Select("select title, content, writer, time from assignment")
     public List<Assignment> findAllAssignment();
+
+    @Select("select name, password, type from user")
+    public List<User> findAllUsers();
+
+    @Insert("insert into user(name, password, type) values(#{name}, #{password}, #{type})")
+    public void saveUser(User user);
 }
