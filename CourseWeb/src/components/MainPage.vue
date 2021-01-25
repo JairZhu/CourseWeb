@@ -10,10 +10,8 @@
           <div>
             <div style="text-align: center">
               <el-image v-if="$store.state.isTeacher" :src="require('@/assets/teacher.png')" :fit="'contain'" style="width: 150px; height: 150px;"></el-image>
-              <el-image v-else :src="require('@/assets/student.png')" :fit="'contain'" style="width: 150px; height: 150px;"></el-image>
-              <br>
-              <span>{{$store.state.user.name}}</span>
-              <br>
+              <el-image v-else :src="require('@/assets/student.png')" :fit="'contain'" style="width: 150px; height: 150px;"></el-image><br>
+              <span>{{$store.state.user.name}}</span><br>
               <el-button type="danger" @click="userLogout" style="margin-top: 10px" round>退出</el-button>
             </div>
           </div>
@@ -51,7 +49,30 @@
             <span style="margin-left: 5px">作业上传</span>
           </div>
           <div>
-<!--           todo:作业上传-->
+            <el-form :model="homeworkForm" :rules="editDialogFormRules" ref="homeworkForm" label-width="70px">
+              <el-form-item label="标题" prop="title">
+                <el-input v-model="homeworkForm.title" placeholder="请输入标题"></el-input>
+              </el-form-item>
+              <el-form-item label="内容" prop="content">
+                <el-input type="textarea" :row="2" placeholder="请输入内容" v-model="homeworkForm.content"></el-input>
+              </el-form-item>
+              <el-form-item label="文件">
+                <el-upload
+                  action="https://jsonplaceholder.typicode.com/posts/"
+                  multiple
+                  :limit="1">
+                  <el-button size="small" type="primary">点击上传</el-button>
+                  <div slot="tip" class="el-upload__tip">只能上传pdf文件，且不超过10MB</div>
+                </el-upload>
+              </el-form-item>
+              <el-form-item label="时间" prop="time">
+                <el-date-picker v-model="homeworkForm.time" type="datetime" placeholder="请选择日期时间" style="width: 200px"></el-date-picker>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="submitHomework('homeworkForm')">立即提交</el-button>
+                <el-button @click="resetHomework('homeworkForm')">重置</el-button>
+              </el-form-item>
+            </el-form>
           </div>
         </el-card>
       </el-col>
@@ -66,7 +87,7 @@
           </div>
           <div v-for="i in $store.state.news" :key="i" style="margin-bottom: 18px">
             <i class="el-icon-link"></i>
-            <el-button type="text" @click="getDialogInfo(i)">{{i.title}}</el-button>
+            <el-button type="text" @click="getDrawerInfo(i)">{{i.title}}</el-button>
           </div>
         </el-card>
         <el-card>
@@ -79,7 +100,7 @@
           </div>
           <div v-for="i in $store.state.notifications" :key="i" style="margin-bottom: 18px">
             <i class="el-icon-position"></i>
-            <el-button type="text" @click="getDialogInfo(i)">{{i.title}}</el-button>
+            <el-button type="text" @click="getDrawerInfo(i)">{{i.title}}</el-button>
           </div>
         </el-card>
       </el-col>
@@ -107,23 +128,24 @@
           </div>
           <div v-for="i in $store.state.ppts" style="margin-bottom: 18px">
             <i class="el-icon-tickets"></i>
-            <a :href="'static/ppt/' + i.title" :download="i.title">{{i.title}}</a>
+            <el-link type="primary" :href="'static/ppt/' + i.title" :download="i.title">{{i.title}}</el-link>
           </div>
         </el-card>
       </el-col>
     </el-row>
     <el-drawer
-      :title="assignmentsDrawer.title"
-      :visible.sync="assignmentsDrawer.visible"
-      :direction="assignmentsDrawer.direction">
-      <div style="margin-left: 20px; margin-right: 20px;">
-        <span style="line-height: initial; white-space: pre-wrap">{{assignmentsDrawer.content}}</span>
+      :title="showDrawer.title"
+      :visible.sync="showDrawer.visible"
+      :direction="'ltr'"
+      size="100%">
+      <div style="margin-left: 20px; margin-right: 20px;margin-bottom: 20px">
+        <span style="line-height: initial; white-space: pre-wrap">{{showDrawer.content}}</span>
       </div>
     </el-drawer>
     <el-drawer
       :title="variousDrawers.title"
       :visible.sync="variousDrawers.visible"
-      :direction="variousDrawers.direction">
+      :direction="'ltr'">
       <div style="margin-left: 20px">
         <el-checkbox-group v-model="checkList" style="">
           <span v-for="i in variousDrawers.content" :key="i">
@@ -132,7 +154,7 @@
           </span>
         </el-checkbox-group>
         <div style="text-align: center;margin-top: 10px">
-          <el-button type="text" icon="el-icon-plus" style="margin-right: 30px;" circle></el-button>
+          <el-button type="text" icon="el-icon-plus" style="margin-right: 30px;" @click="showEditDialog(variousDrawers.title)" circle></el-button>
           <el-popover
             placement="top"
             v-model="popoverVisible">
@@ -144,17 +166,26 @@
               <el-button size="mini" type="text" @click="popoverVisible = false">取消</el-button>
               <el-button type="primary" size="mini" @click="deleteInfo(variousDrawers.title, checkList)">确定</el-button>
             </div>
-            <el-button slot="reference" type="text" icon="el-icon-delete"  circle></el-button>
+            <el-button slot="reference" type="text" icon="el-icon-delete" circle></el-button>
           </el-popover>
         </div>
       </div>
     </el-drawer>
-    <el-dialog
-      :title="dialog.title"
-      :visible.sync="dialog.visible"
-      width="60%">
-      <div style="margin-left: 20px; margin-right: 20px;">
-        <span style="line-height: initial; white-space: pre-wrap">{{dialog.content}}</span>
+    <el-dialog :title="dialog.title" :visible.sync="dialog.visible">
+      <el-form :model="dialog.form" :rules="editDialogFormRules" ref="editDialogForm" label-width="80px">
+        <el-form-item label="标题" prop="title">
+          <el-input v-model="dialog.form.title" placeholder="请输入标题" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="时间" prop="time">
+          <el-date-picker v-model="dialog.form.time" type="datetime" placeholder="请选择日期时间"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="内容" prop="content">
+          <el-input type="textarea" :row="2" placeholder="请输入内容" v-model="dialog.form.content"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" style="text-align: right">
+        <el-button @click="dialog.visible = false">取 消</el-button>
+        <el-button type="primary" @click="addInfo('editDialogForm', dialog)">添 加</el-button>
       </div>
     </el-dialog>
   </div>
@@ -167,22 +198,32 @@ export default {
     return {
       checkList: [],
       popoverVisible: false,
-      assignmentsDrawer: {
+      showDrawer: {
         visible: false,
-        direction: 'ltr',
-        title: null,
-        content: null,
+        title: '',
+        content: '',
       },
       variousDrawers: {
         visible: false,
-        direction: 'ltr',
-        title: null,
-        content: null,
+        title: '',
+        content: '',
       },
       dialog: {
-        title: null,
+        title: '',
         visible: false,
-        content: null,
+        form: {
+          title: '',
+          content: '',
+          writer: '',
+          time: ''
+        }
+      },
+      homeworkForm: {
+        title: '',
+        content: '',
+        filename: '',
+        writer: '',
+        time: ''
       },
       ruleForm: {
         name: '',
@@ -200,16 +241,35 @@ export default {
           { required: true, message: '请选择类型', trigger: 'change' }
         ],
       },
+      editDialogFormRules: {
+        title: [
+          { required: true, message: '请输入标题', trigger: 'blur' },
+        ],
+        time: [
+          { required: true, message: '请选择日期时间', trigger: 'change'}
+        ],
+        content: [
+          { required: true, message: '请输入内容', trigger: 'blur'}
+        ]
+      },
     };
   },
   methods: {
     userLogout() {
       this.$store.commit('setIsLogin', false);
       this.$store.commit('setTeacher', false);
-      this.$store.commit('setUser', null);
+      this.$store.commit('setUser', {
+        name: '',
+        password: '',
+        type: false,
+      });
       localStorage.setItem("isLogin", JSON.stringify(false));
       localStorage.setItem("isTeacher", JSON.stringify(false));
-      localStorage.setItem("user", JSON.stringify(null));
+      localStorage.setItem("user", JSON.stringify({
+        name: '',
+        password: '',
+        type: false,
+      }));
     },
     userLogin() {
       this.$store.commit('setIsLogin', true);
@@ -223,28 +283,72 @@ export default {
       this.variousDrawers = {
         visible: true,
         title: title,
-        direction: 'ltr',
         content: items
       }
     },
     getDrawerInfo(item) {
-      this.assignmentsDrawer = {
+      this.showDrawer = {
         visible: true,
         title: item.title,
-        direction: 'ltr',
         content: item.content
       }
       // console.log(this.drawerContent);
     },
-    getDialogInfo(item) {
-      this.dialog = {
-        visible: true,
-        title: item.title,
-        content: item.content
-      };
-      // console.log(this.dialogContent)
+    showEditDialog(title) {
+      this.dialog.title = title;
+      this.dialog.visible = true;
+      console.log("showEditDialog" + this.dialog);
     },
-    updateInfo(result, args) {
+    updateAddInfo(res, args) {
+      if (res.data) {
+        this.$store.commit(args.type, args.data);
+        this.$message({
+          type: 'success',
+          message: '添加成功',
+        });
+      } else {
+        this.$message.error("添加失败！标题不能重复！")
+      }
+      this.dialog.visible = false;
+      this.variousDrawers.visible = false;
+    },
+    addInfo(formName, dialog) {
+      dialog.form.writer = this.$store.state.user.name;
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          if (dialog.title === "编辑新闻") {
+            this.$http.post("http://localhost:8090/saveNews", dialog.form).then(result => {
+              this.updateAddInfo(result, {
+                type: 'addNews',
+                data: JSON.parse(JSON.stringify(dialog.form))
+              })
+            })
+          } else if (dialog.title === "编辑通知") {
+            this.$http.post("http://localhost:8090/saveNotification", dialog.form).then(result => {
+              this.updateAddInfo(result, {
+                type: 'addNotification',
+                data: JSON.parse(JSON.stringify(dialog.form))
+              })
+            })
+          } else if (dialog.title === "编辑作业") {
+            this.$http.post("http://localhost:8090/saveAssignment", dialog.form).then(result => {
+              this.updateAddInfo(result, {
+                type: 'addAssignment',
+                data: JSON.parse(JSON.stringify(dialog.form))
+              })
+            })
+          } else if (dialog.title === "编辑课件") {
+            this.$http.post("http://localhost:8090/savePPT", dialog.form).then(result => {
+              this.updateAddInfo(result, {
+                type: 'addPPT',
+                data: JSON.parse(JSON.stringify(dialog.form))
+              })
+            })
+          }
+        }
+      });
+    },
+    updateDeleteInfo(result, args) {
       if (result.data) {
         this.$store.commit(args.type, args.array.filter(function (v) {return args.checkList.indexOf(v.title) === -1}))
         this.$message({
@@ -261,7 +365,7 @@ export default {
     deleteInfo(type, checkList) {
       if (type === '编辑新闻') {
         this.$http.post("http://localhost:8090/deleteNews", checkList).then(result => {
-          this.updateInfo(result, {
+          this.updateDeleteInfo(result, {
             type: 'setNews',
             array: this.$store.state.news,
             checkList: checkList
@@ -269,7 +373,7 @@ export default {
         });
       } else if (type === '编辑通知') {
         this.$http.post("http://localhost:8090/deleteNotification", checkList).then(result => {
-          this.updateInfo(result, {
+          this.updateDeleteInfo(result, {
             type: 'setNotifications',
             array: this.$store.state.notifications,
             checkList: checkList
@@ -277,7 +381,7 @@ export default {
         });
       } else if (type === '编辑作业') {
         this.$http.post("http://localhost:8090/deleteAssignment", checkList).then(result => {
-          this.updateInfo(result, {
+          this.updateDeleteInfo(result, {
             type: 'setAssignments',
             array: this.$store.state.assignments,
             checkList: checkList
@@ -285,7 +389,7 @@ export default {
         });
       } else if (type === '编辑课件') {
         this.$http.post("http://localhost:8090/deletePPT", checkList).then(result => {
-          this.updateInfo(result, {
+          this.updateDeleteInfo(result, {
             type: 'setPPTs',
             array: this.$store.state.ppts,
             checkList: checkList
@@ -352,6 +456,24 @@ export default {
           })
         }
       });
+    },
+    submitHomework(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (this.$store.state.isLogin) {
+          this.homeworkForm.writer = this.$store.state.user.name;
+          if (valid) {
+            console.log("homeworkForm:")
+            console.log(this.homeworkForm)
+          } else {
+            console.log('error submit!!');
+          }
+        } else {
+          this.$message.error("请登录！")
+        }
+      });
+    },
+    resetHomework(formName) {
+      this.$refs[formName].resetFields();
     }
   },
   created() {

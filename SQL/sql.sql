@@ -47,15 +47,13 @@ create table `assignment` (
 
 create table `homework` (
   `title` varchar(100) not null ,
-  `assignmentTitle` varchar(100) not null ,
   `content` varchar(1000),
   `fileName` varchar(1000),
   `writer` varchar(50) not null ,
   `time` timestamp not null ,
   `score` int ,
   primary key (title),
-  foreign key (writer) references user(name) on delete cascade on update cascade,
-  foreign key (assignmentTitle) references assignment(title) on delete cascade on update cascade
+  foreign key (writer) references user(name) on delete cascade on update cascade
 );
 
 create table `courseInformation` (
@@ -193,3 +191,7 @@ insert into assignment values ('分布式机群监管系统实验',
                                '    以一个分布式机群监管系统作为例子，要求学生掌握使用各种结构视图，实现对系统结构的描述，并采用各种开源框架和具体编程技术实现该系统的简化版本。
     根据附录所列的用户需求列表，整理用户需求，完成用例图分析。根据附录提供的结构图，采用课程所描述的各种视图方法，完成对系统结构的描述。最后编程实现系统。',
                                '丁箐', now());
+
+insert into assignment values ('作业6',
+                               'Under what circumstances can be it useful to use the Composite design pattern?',
+                               'teacher', now());

@@ -55,7 +55,67 @@ public class CourseWebController {
             Common.courseWebMapper.saveUser(user);
             return true;
         } catch (Exception exception) {
-            logger.info(exception.toString());
+            exception.printStackTrace();
+            return false;
+        }
+    }
+
+    @PostMapping(value = "savePPT")
+    @ResponseBody
+    public boolean savePPT(@RequestBody PPT ppt) {
+        try {
+            Common.courseWebMapper.savePPT(ppt);
+            return true;
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return false;
+        }
+    }
+
+    @PostMapping(value = "saveNews")
+    @ResponseBody
+    public boolean saveNews(@RequestBody News news) {
+        try {
+            Common.courseWebMapper.saveNews(news);
+            return true;
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return false;
+        }
+    }
+
+    @PostMapping(value = "saveNotification")
+    @ResponseBody
+    public boolean saveNotification(@RequestBody Notification notification) {
+        try {
+            Common.courseWebMapper.saveNotification(notification);
+            return true;
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return false;
+        }
+    }
+
+    @PostMapping(value = "saveAssignment")
+    @ResponseBody
+    public boolean saveAssignment(@RequestBody Assignment assignment) {
+        try {
+            Common.courseWebMapper.saveAssignment(assignment);
+            return true;
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return false;
+        }
+    }
+
+    @PostMapping(value = "saveCourseInformation")
+    @ResponseBody
+    public boolean saveCourseInformation(@RequestBody CourseInformation courseInformation) {
+        try {
+            Common.courseWebMapper.saveCourseInformation(courseInformation);
+            return true;
+        } catch (Exception exception) {
+            exception.printStackTrace();
             return false;
         }
     }

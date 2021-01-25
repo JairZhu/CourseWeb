@@ -28,6 +28,21 @@ public interface CourseWebMapper {
     @Insert("insert into user(name, password, type) values(#{name}, #{password}, #{type})")
     public void saveUser(User user);
 
+    @Insert("insert into ppt values(#{title}, #{writer}, #{time})")
+    public void savePPT(PPT ppt);
+
+    @Insert("insert into news values(#{title}, #{content}, #{writer}, #{time})")
+    public void saveNews(News news);
+
+    @Insert("insert into notification values(#{title}, #{content}, #{writer}, #{time})")
+    public void saveNotification(Notification notification);
+
+    @Insert("insert into assignment values(#{title}, #{content}, #{writer}, #{time})")
+    public void saveAssignment(Assignment assignment);
+
+    @Insert("insert into courseInformation values(#{title}, #{content}, #{writer}, #{time})")
+    public void saveCourseInformation(CourseInformation courseInformation);
+
     @Delete("delete from news where title = #{title}")
     public void deleteNews(String title);
 

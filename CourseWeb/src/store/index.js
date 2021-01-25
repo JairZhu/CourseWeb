@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import it from "element-ui/src/locale/lang/it";
 
 Vue.use(Vuex)
 
@@ -34,7 +35,19 @@ const store = new Vuex.Store({
     },
     setNotifications(state, item) {
       state.notifications = item;
-    }
+    },
+    addNews(state, item) {
+      state.news.push(item);
+    },
+    addNotification(state, item) {
+      state.notifications.push(item);
+    },
+    addAssignment(state, item) {
+      state.assignments.push(item);
+    },
+    addPPT(state, item) {
+      state.ppts.push(item);
+    },
   },
   actions: {},
   getters: {},

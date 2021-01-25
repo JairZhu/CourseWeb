@@ -1,12 +1,13 @@
 package org.jairzhu.coursewebserver.domain;
 
+import java.util.Date;
 import java.util.Objects;
 
 public class Assignment {
     private String title;
     private String content;
     private String writer;
-    private String time;
+    private Date time;
 
     @Override
     public String toString() {
@@ -55,11 +56,11 @@ public class Assignment {
         this.writer = writer;
     }
 
-    public String getTime() {
+    public Date getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(Date time) {
         this.time = time;
     }
 }
