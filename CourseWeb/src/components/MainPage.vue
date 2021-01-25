@@ -60,8 +60,11 @@
           <div slot="header">
             <i class="el-icon-news"></i>
             <span style="margin-left: 5px;">新闻</span>
+            <span v-if="$store.state.isTeacher" style="float: right">
+              <el-button type="text" @click="editInfo('编辑新闻', $store.state.news)">编辑</el-button>
+            </span>
           </div>
-          <div v-for="i in news" :key="i" style="margin-bottom: 18px">
+          <div v-for="i in $store.state.news" :key="i" style="margin-bottom: 18px">
             <i class="el-icon-link"></i>
             <el-button type="text" @click="getDialogInfo(i)">{{i.title}}</el-button>
           </div>
@@ -70,8 +73,11 @@
           <div slot="header">
             <i class="el-icon-bell"></i>
             <span style="margin-left: 5px;">通知</span>
+            <span v-if="$store.state.isTeacher" style="float: right">
+              <el-button type="text" @click="editInfo('编辑通知', $store.state.notifications)">编辑</el-button>
+            </span>
           </div>
-          <div v-for="i in notifications" :key="i" style="margin-bottom: 18px">
+          <div v-for="i in $store.state.notifications" :key="i" style="margin-bottom: 18px">
             <i class="el-icon-position"></i>
             <el-button type="text" @click="getDialogInfo(i)">{{i.title}}</el-button>
           </div>
@@ -82,8 +88,11 @@
           <div slot="header">
             <i class="el-icon-edit-outline"></i>
             <span style="margin-left: 5px;">最新作业列表</span>
+            <span v-if="$store.state.isTeacher" style="float: right">
+              <el-button type="text" @click="editInfo('编辑作业', $store.state.assignments)">编辑</el-button>
+            </span>
           </div>
-          <div v-for="i in assignments" :key="i" style="margin-bottom: 18px">
+          <div v-for="i in $store.state.assignments" :key="i" style="margin-bottom: 18px">
             <i class="el-icon-notebook-1"></i>
             <el-button type="text" @click="getDrawerInfo(i)">{{i.title}}</el-button>
           </div>
@@ -92,8 +101,11 @@
           <div slot="header">
             <i class="el-icon-document-copy"></i>
             <span style="margin-left: 5px">课件下载</span>
+            <span v-if="$store.state.isTeacher" style="float: right">
+              <el-button type="text" @click="editInfo('编辑课件', $store.state.ppts)">编辑</el-button>
+            </span>
           </div>
-          <div v-for="i in ppts" style="margin-bottom: 18px">
+          <div v-for="i in $store.state.ppts" style="margin-bottom: 18px">
             <i class="el-icon-tickets"></i>
             <a :href="'static/ppt/' + i.title" :download="i.title">{{i.title}}</a>
           </div>
@@ -101,19 +113,48 @@
       </el-col>
     </el-row>
     <el-drawer
-      :title="drawerTitle"
-      :visible.sync="drawerVisible"
-      :direction="drawerDirection">
+      :title="assignmentsDrawer.title"
+      :visible.sync="assignmentsDrawer.visible"
+      :direction="assignmentsDrawer.direction">
       <div style="margin-left: 20px; margin-right: 20px;">
-        <span style="line-height: initial; white-space: pre-wrap">{{drawerContent}}</span>
+        <span style="line-height: initial; white-space: pre-wrap">{{assignmentsDrawer.content}}</span>
+      </div>
+    </el-drawer>
+    <el-drawer
+      :title="variousDrawers.title"
+      :visible.sync="variousDrawers.visible"
+      :direction="variousDrawers.direction">
+      <div style="margin-left: 20px">
+        <el-checkbox-group v-model="checkList" style="">
+          <span v-for="i in variousDrawers.content" :key="i">
+            <el-checkbox  :label="i.title"></el-checkbox>
+            <br>
+          </span>
+        </el-checkbox-group>
+        <div style="text-align: center;margin-top: 10px">
+          <el-button type="text" icon="el-icon-plus" style="margin-right: 30px;" circle></el-button>
+          <el-popover
+            placement="top"
+            v-model="popoverVisible">
+            <p>
+              <i class="el-icon-info" style="color: red"></i>
+              <span style="margin-left: 3px">确定删除吗？</span>
+            </p>
+            <div style="text-align: right; margin: 0">
+              <el-button size="mini" type="text" @click="popoverVisible = false">取消</el-button>
+              <el-button type="primary" size="mini" @click="deleteInfo(variousDrawers.title, checkList)">确定</el-button>
+            </div>
+            <el-button slot="reference" type="text" icon="el-icon-delete"  circle></el-button>
+          </el-popover>
+        </div>
       </div>
     </el-drawer>
     <el-dialog
-      :title="dialogTitle"
-      :visible.sync="dialogVisible"
+      :title="dialog.title"
+      :visible.sync="dialog.visible"
       width="60%">
       <div style="margin-left: 20px; margin-right: 20px;">
-        <span style="line-height: initial; white-space: pre-wrap">{{dialogContent}}</span>
+        <span style="line-height: initial; white-space: pre-wrap">{{dialog.content}}</span>
       </div>
     </el-dialog>
   </div>
@@ -124,13 +165,25 @@ export default {
   name: "MainPage",
   data() {
     return {
-      drawerVisible: false,
-      drawerDirection: 'ltr',
-      drawerTitle: null,
-      drawerContent: null,
-      dialogTitle: null,
-      dialogVisible: false,
-      dialogContent: null,
+      checkList: [],
+      popoverVisible: false,
+      assignmentsDrawer: {
+        visible: false,
+        direction: 'ltr',
+        title: null,
+        content: null,
+      },
+      variousDrawers: {
+        visible: false,
+        direction: 'ltr',
+        title: null,
+        content: null,
+      },
+      dialog: {
+        title: null,
+        visible: false,
+        content: null,
+      },
       ruleForm: {
         name: '',
         password: '',
@@ -147,10 +200,6 @@ export default {
           { required: true, message: '请选择类型', trigger: 'change' }
         ],
       },
-      news: [],
-      notifications: [],
-      ppts: [],
-      assignments: [],
     };
   },
   methods: {
@@ -162,18 +211,87 @@ export default {
       localStorage.setItem("isTeacher", JSON.stringify(false));
       localStorage.setItem("user", JSON.stringify(null));
     },
+    userLogin() {
+      this.$store.commit('setIsLogin', true);
+      this.$store.commit('setTeacher', (this.ruleForm.type === 'true'));
+      this.$store.commit('setUser', this.ruleForm);
+      localStorage.setItem("isLogin", JSON.stringify(this.$store.state.isLogin));
+      localStorage.setItem("isTeacher", JSON.stringify(this.$store.state.isTeacher));
+      localStorage.setItem("user", JSON.stringify(this.$store.state.user));
+    },
+    editInfo(title, items) {
+      this.variousDrawers = {
+        visible: true,
+        title: title,
+        direction: 'ltr',
+        content: items
+      }
+    },
     getDrawerInfo(item) {
-      this.drawerVisible = true;
-      this.drawerTitle = item.title;
-      this.drawerDirection = 'ltr';
-      this.drawerContent = item.content;
+      this.assignmentsDrawer = {
+        visible: true,
+        title: item.title,
+        direction: 'ltr',
+        content: item.content
+      }
       // console.log(this.drawerContent);
     },
     getDialogInfo(item) {
-      this.dialogVisible = true;
-      this.dialogTitle = item.title;
-      this.dialogContent = item.content;
+      this.dialog = {
+        visible: true,
+        title: item.title,
+        content: item.content
+      };
       // console.log(this.dialogContent)
+    },
+    updateInfo(result, args) {
+      if (result.data) {
+        this.$store.commit(args.type, args.array.filter(function (v) {return args.checkList.indexOf(v.title) === -1}))
+        this.$message({
+          message: "删除成功！",
+          type: 'success'
+        });
+      } else {
+        this.$message.error("删除失败！");
+      }
+      this.popoverVisible = false;
+      this.variousDrawers.visible = false;
+      args.checkList = [];
+    },
+    deleteInfo(type, checkList) {
+      if (type === '编辑新闻') {
+        this.$http.post("http://localhost:8090/deleteNews", checkList).then(result => {
+          this.updateInfo(result, {
+            type: 'setNews',
+            array: this.$store.state.news,
+            checkList: checkList
+          })
+        });
+      } else if (type === '编辑通知') {
+        this.$http.post("http://localhost:8090/deleteNotification", checkList).then(result => {
+          this.updateInfo(result, {
+            type: 'setNotifications',
+            array: this.$store.state.notifications,
+            checkList: checkList
+          })
+        });
+      } else if (type === '编辑作业') {
+        this.$http.post("http://localhost:8090/deleteAssignment", checkList).then(result => {
+          this.updateInfo(result, {
+            type: 'setAssignments',
+            array: this.$store.state.assignments,
+            checkList: checkList
+          });
+        });
+      } else if (type === '编辑课件') {
+        this.$http.post("http://localhost:8090/deletePPT", checkList).then(result => {
+          this.updateInfo(result, {
+            type: 'setPPTs',
+            array: this.$store.state.ppts,
+            checkList: checkList
+          })
+        });
+      }
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -181,21 +299,14 @@ export default {
           // console.log(this.ruleForm);
           this.$http.post("http://localhost:8090/postUser", this.ruleForm).then(result => {
             if (result.data) {
-              this.$store.commit('setIsLogin', true);
-              this.$store.commit('setTeacher', (this.ruleForm.type === 'true'));
-              this.$store.commit('setUser', this.ruleForm);
-              localStorage.setItem("isLogin", JSON.stringify(this.$store.state.isLogin));
-              localStorage.setItem("isTeacher", JSON.stringify(this.$store.state.isTeacher));
-              localStorage.setItem("user", JSON.stringify(this.$store.state.user));
+              this.userLogin();
               this.$notify({
                 title: '登录成功',
                 message: this.$store.state.user.name + '，欢迎！',
                 type: 'success',
               });
             } else {
-              this.$store.commit('setIsLogin', false);
-              this.$store.commit('setTeacher', false);
-              this.$store.commit('setUser', null);
+              this.userLogout();
               this.$notify.error({
                 title: '登录失败',
                 message: '账号、密码或类型错误！',
@@ -203,9 +314,7 @@ export default {
             }
           })
         } else {
-          this.$store.commit('setIsLogin', false);
-          this.$store.commit('setTeacher', false);
-          this.$store.commit('setUser', null);
+          this.userLogout()
           this.$notify.error({
             title: '登录失败',
             message: '请正确填写信息！',
@@ -221,21 +330,14 @@ export default {
         if (valid) {
           this.$http.post("http://localhost:8090/saveUser", this.ruleForm).then(result => {
             if (result.data) {
-              this.$store.commit('setIsLogin', true);
-              this.$store.commit('setTeacher', (this.ruleForm.type === 'true'));
-              this.$store.commit('setUser', this.ruleForm);
-              localStorage.setItem("isLogin", JSON.stringify(this.$store.state.isLogin));
-              localStorage.setItem("isTeacher", JSON.stringify(this.$store.state.isTeacher));
-              localStorage.setItem("user", JSON.stringify(this.$store.state.user));
+              this.userLogin();
               this.$notify({
                 title: '注册成功',
                 message: this.$store.state.user.name + '，欢迎！',
                 type: 'success',
               })
             } else {
-              this.$store.commit('setIsLogin', false);
-              this.$store.commit('setTeacher', false);
-              this.$store.commit('setUser', null);
+              this.userLogout();
               this.$notify.error({
                 title: '注册失败',
                 message: '用户已存在！',
@@ -243,9 +345,7 @@ export default {
             }
           });
         } else {
-          this.$store.commit('setIsLogin', false);
-          this.$store.commit('setTeacher', false);
-          this.$store.commit('setUser', null);
+          this.userLogout();
           this.$notify.error({
             title: '注册失败',
             message: '请正确填写信息！',
@@ -256,19 +356,19 @@ export default {
   },
   created() {
     this.$http.get("http://localhost:8090/getPPTs").then(result => {
-      this.ppts = result.data;
+      this.$store.commit('setPPTs', result.data);
       // console.log(result.data);
     });
     this.$http.get("http://localhost:8090/getNews").then(result => {
-      this.news = result.data;
+      this.$store.commit('setNews', result.data);
       // console.log(this.news[0].content);
     });
     this.$http.get("http://localhost:8090/getNotifications").then(result => {
-      this.notifications = result.data;
+      this.$store.commit('setNotifications', result.data);
       // console.log(this.notifications[0].content);
     });
     this.$http.get("http://localhost:8090/getAssignments").then(result => {
-      this.assignments = result.data;
+      this.$store.commit('setAssignments', result.data);
     });
     this.$store.commit('setIsLogin', JSON.parse(localStorage.getItem("isLogin")));
     this.$store.commit('setTeacher', JSON.parse(localStorage.getItem("isTeacher")));
@@ -283,5 +383,8 @@ export default {
 }
 .el-drawer__header span:focus {
   outline: 0;
+}
+.el-drawer__body {
+  overflow: auto;
 }
 </style>

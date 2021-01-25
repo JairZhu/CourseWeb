@@ -7,7 +7,11 @@ const store = new Vuex.Store({
   state: {
     isLogin: false,
     isTeacher: false, //true表示老师，false表示学生
-    user: null
+    user: null,
+    assignments: [],
+    news: [],
+    ppts: [],
+    notifications: []
   },
   mutations: {
     setIsLogin(state, online) {
@@ -18,6 +22,18 @@ const store = new Vuex.Store({
     },
     setUser(state, item) {
       state.user = item;
+    },
+    setAssignments(state, item) {
+      state.assignments = item;
+    },
+    setNews(state, item) {
+      state.news = item;
+    },
+    setPPTs(state, item) {
+      state.ppts = item;
+    },
+    setNotifications(state, item) {
+      state.notifications = item;
     }
   },
   actions: {},

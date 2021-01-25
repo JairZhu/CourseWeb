@@ -59,4 +59,43 @@ public class CourseWebController {
             return false;
         }
     }
+
+    @PostMapping(value = "deleteNews")
+    @ResponseBody
+    public boolean deleteNews(@RequestBody List<String> titles) {
+        for (String title: titles)
+            Common.courseWebMapper.deleteNews(title);
+        return true;
+    }
+
+    @PostMapping(value = "deletePPT")
+    @ResponseBody
+    public boolean deletePPT(@RequestBody List<String> titles) {
+        for (String title: titles)
+            Common.courseWebMapper.deletePPT(title);
+        return true;
+    }
+
+    @PostMapping(value = "deleteNotification")
+    @ResponseBody
+    public boolean deleteNotification(@RequestBody List<String> titles) {
+        for (String title: titles)
+            Common.courseWebMapper.deleteNotifications(title);
+        return true;
+    }
+
+    @PostMapping(value = "deleteAssignment")
+    @ResponseBody
+    public boolean deleteAssignment(@RequestBody List<String> titles) {
+        for (String title: titles)
+            Common.courseWebMapper.deleteAssignment(title);
+        return true;
+    }
+
+    @PostMapping(value = "deleteCourseInformation")
+    @ResponseBody
+    public boolean deleteCourseInformation(@RequestBody String title) {
+        Common.courseWebMapper.deleteCourseInformation(title);
+        return true;
+    }
 }
