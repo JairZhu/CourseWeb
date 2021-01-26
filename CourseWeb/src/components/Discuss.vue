@@ -8,7 +8,15 @@
 
 <script>
 export default {
-name: "Discuss"
+  name: "Discuss",
+  data() {
+
+  },
+  methods: {
+
+  },
+  created() {
+  }
 }
 </script>
 

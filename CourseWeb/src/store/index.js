@@ -14,6 +14,7 @@ const store = new Vuex.Store({
     ppts: [],
     notifications: [],
     homeworks: [],
+    courseInformation: '',
   },
   mutations: {
     setIsLogin(state, online) {
@@ -39,6 +40,9 @@ const store = new Vuex.Store({
     },
     setHomeworks(state, item) {
       state.homeworks = item;
+    },
+    setCourseInformation(state, item) {
+      state.courseInformation = item;
     },
     addNews(state, item) {
       state.news.push(item);

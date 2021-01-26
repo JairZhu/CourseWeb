@@ -58,6 +58,10 @@ public class CourseWebController {
     @ResponseBody
     public List<Homework> findAllHomeworks() { return courseWebMapper.findAllHomeworks();}
 
+    @RequestMapping(value = "getCourseInformation")
+    @ResponseBody
+    public List<CourseInformation> findCourseInformation() { return courseWebMapper.findCourseInformation();}
+
     @PostMapping(value = "postUser")
     @ResponseBody
     public boolean userLogin(@RequestBody User user) {
@@ -195,9 +199,9 @@ public class CourseWebController {
 
     @PostMapping(value = "deleteCourseInformation")
     @ResponseBody
-    public boolean deleteCourseInformation(@RequestBody String title) {
-        logger.info(title);
-        courseWebMapper.deleteCourseInformation(title);
+    public boolean deleteCourseInformation(@RequestBody List<String> title) {
+        logger.info(title.toString());
+        courseWebMapper.deleteCourseInformation(title.get(0));
         return true;
     }
 

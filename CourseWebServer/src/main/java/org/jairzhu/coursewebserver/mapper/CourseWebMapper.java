@@ -23,7 +23,7 @@ public interface CourseWebMapper {
     public List<User> findAllUsers();
 
     @Select("select title, content, writer, time from courseInformation")
-    public CourseInformation findCourseInformation();
+    public List<CourseInformation> findCourseInformation();
 
     @Select("select title, content, fileName, writer, time, score from homework")
     public List<Homework> findAllHomeworks();

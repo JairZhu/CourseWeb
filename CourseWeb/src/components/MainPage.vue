@@ -85,7 +85,7 @@
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="submitHomework('homeworkForm')" :disabled="!$store.state.isLogin">立即提交</el-button>
-                <el-button @click="resetHomework('homeworkForm')">重置</el-button>
+                <el-button @click="resetForm('homeworkForm')">重置</el-button>
               </el-form-item>
             </el-form>
           </div>
@@ -151,7 +151,7 @@
     <el-drawer :title="showDrawer.title" :visible.sync="showDrawer.visible" :direction="'ltr'" size="50%">
       <div style="margin-left: 20px; margin-right: 20px;margin-bottom: 20px">
         <span>作者：{{showDrawer.content.writer}}</span><br><br>
-        <span style="line-height: initial; white-space: pre-wrap">{{showDrawer.content.content}}</span>
+        <span style="line-height: 150%; white-space: pre-wrap">{{showDrawer.content.content}}</span>
       </div>
     </el-drawer>
     <el-drawer :title="variousDrawers.title" :visible.sync="variousDrawers.visible" :direction="'ltr'">
@@ -181,7 +181,7 @@
       <div style="margin-left: 20px; margin-right: 20px;margin-bottom: 20px">
         <span>作者：{{homeworkDrawer.writer}}</span> <br><br>
 <!--        <p style="text-indent: 20px">{{homeworkDrawer.time}}</p>-->
-        <span style="line-height: initial; white-space: pre-wrap">内容：{{homeworkDrawer.content}}</span><br><br>
+        <span style="line-height: 150%; white-space: pre-wrap">内容：{{homeworkDrawer.content}}</span><br><br>
         文件：<el-link type="primary" :href="'http://localhost:8090/downloadFile/homework/'+ homeworkDrawer.fileName">{{homeworkDrawer.fileName}}</el-link><br><br>
         分数：<el-input v-model="homeworkDrawer.score" placeholder="请输入分数" style="width: 120px" oninput="value=value.replace(/[^\d]/g,'')" clearable></el-input><br><br>
         <div style="text-align: center">
@@ -204,11 +204,12 @@
           </el-upload>
         </el-form-item>
         <el-form-item label="内容" prop="content">
-          <el-input type="textarea" :row="2" placeholder="请输入内容" v-model="dialog.form.content"></el-input>
+          <el-input type="textarea" :row="4" placeholder="请输入内容" v-model="dialog.form.content"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" style="text-align: right">
         <el-button @click="dialog.visible = false">取 消</el-button>
+        <el-button @click="resetForm('editDialogForm')">重 置</el-button>
         <el-button type="primary" @click="addInfo('editDialogForm', dialog)">添 加</el-button>
       </div>
     </el-dialog>
@@ -515,9 +516,6 @@ export default {
           }
         }
       });
-    },
-    resetHomework(formName) {
-      this.$refs[formName].resetFields();
     },
     handlePPTUpload(file) {
       console.log("上传课件：", file);
