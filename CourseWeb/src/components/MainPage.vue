@@ -43,7 +43,19 @@
             </el-form>
           </div>
         </el-card>
-        <el-card>
+        <el-card v-if="$store.state.isTeacher">
+          <div slot="header">
+            <i class="el-icon-document-checked"></i>
+            <span style="margin-left: 5px">作业查看</span>
+          </div>
+          <div>
+            <div v-for="i in $store.state.homeworks" :key="i" style="margin-bottom: 18px">
+              <i class="el-icon-document"></i>
+              <el-button type="text" @click="showHomeworkDrawer(i)">{{i.title}}</el-button>
+            </div>
+          </div>
+        </el-card>
+        <el-card v-else>
           <div slot="header">
             <i class="el-icon-upload"></i>
             <span style="margin-left: 5px">作业上传</span>
@@ -58,10 +70,13 @@
               </el-form-item>
               <el-form-item label="文件">
                 <el-upload
-                  action="https://jsonplaceholder.typicode.com/posts/"
-                  multiple
-                  :limit="1">
-                  <el-button size="small" type="primary">点击上传</el-button>
+                  action="http://localhost:8090/uploadHomeworkFile"
+                  accept=".pdf"
+                  :before-upload="handleHomeworkUpload"
+                  :before-remove="handleHomeworkRemove"
+                  :limit="1"
+                  :disabled="!$store.state.isLogin">
+                  <el-button size="small" type="primary" :disabled="!$store.state.isLogin">点击上传</el-button>
                   <div slot="tip" class="el-upload__tip">只能上传pdf文件，且不超过10MB</div>
                 </el-upload>
               </el-form-item>
@@ -69,7 +84,7 @@
                 <el-date-picker v-model="homeworkForm.time" type="datetime" placeholder="请选择日期时间" style="width: 200px"></el-date-picker>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="submitHomework('homeworkForm')">立即提交</el-button>
+                <el-button type="primary" @click="submitHomework('homeworkForm')" :disabled="!$store.state.isLogin">立即提交</el-button>
                 <el-button @click="resetHomework('homeworkForm')">重置</el-button>
               </el-form-item>
             </el-form>
@@ -128,36 +143,27 @@
           </div>
           <div v-for="i in $store.state.ppts" style="margin-bottom: 18px">
             <i class="el-icon-tickets"></i>
-            <el-link type="primary" :href="'static/ppt/' + i.title" :download="i.title">{{i.title}}</el-link>
+            <el-link type="primary" :href="'http://localhost:8090/downloadFile/ppt/'+ i.title">{{i.title}}</el-link>
           </div>
         </el-card>
       </el-col>
     </el-row>
-    <el-drawer
-      :title="showDrawer.title"
-      :visible.sync="showDrawer.visible"
-      :direction="'ltr'"
-      size="100%">
+    <el-drawer :title="showDrawer.title" :visible.sync="showDrawer.visible" :direction="'ltr'" size="50%">
       <div style="margin-left: 20px; margin-right: 20px;margin-bottom: 20px">
-        <span style="line-height: initial; white-space: pre-wrap">{{showDrawer.content}}</span>
+        <span>作者：{{showDrawer.content.writer}}</span><br><br>
+        <span style="line-height: initial; white-space: pre-wrap">{{showDrawer.content.content}}</span>
       </div>
     </el-drawer>
-    <el-drawer
-      :title="variousDrawers.title"
-      :visible.sync="variousDrawers.visible"
-      :direction="'ltr'">
+    <el-drawer :title="variousDrawers.title" :visible.sync="variousDrawers.visible" :direction="'ltr'">
       <div style="margin-left: 20px">
         <el-checkbox-group v-model="checkList" style="">
           <span v-for="i in variousDrawers.content" :key="i">
-            <el-checkbox  :label="i.title"></el-checkbox>
-            <br>
+            <el-checkbox  :label="i.title"></el-checkbox> <br>
           </span>
         </el-checkbox-group>
         <div style="text-align: center;margin-top: 10px">
           <el-button type="text" icon="el-icon-plus" style="margin-right: 30px;" @click="showEditDialog(variousDrawers.title)" circle></el-button>
-          <el-popover
-            placement="top"
-            v-model="popoverVisible">
+          <el-popover placement="top" v-model="popoverVisible">
             <p>
               <i class="el-icon-info" style="color: red"></i>
               <span style="margin-left: 3px">确定删除吗？</span>
@@ -168,6 +174,18 @@
             </div>
             <el-button slot="reference" type="text" icon="el-icon-delete" circle></el-button>
           </el-popover>
+        </div>
+      </div>
+    </el-drawer>
+    <el-drawer :title="homeworkDrawer.title" :visible.sync="homeworkDrawer.visible" :direction="'rtl'">
+      <div style="margin-left: 20px; margin-right: 20px;margin-bottom: 20px">
+        <span>作者：{{homeworkDrawer.writer}}</span> <br><br>
+<!--        <p style="text-indent: 20px">{{homeworkDrawer.time}}</p>-->
+        <span style="line-height: initial; white-space: pre-wrap">内容：{{homeworkDrawer.content}}</span><br><br>
+        文件：<el-link type="primary" :href="'http://localhost:8090/downloadFile/homework/'+ homeworkDrawer.fileName">{{homeworkDrawer.fileName}}</el-link><br><br>
+        分数：<el-input v-model="homeworkDrawer.score" placeholder="请输入分数" style="width: 120px" oninput="value=value.replace(/[^\d]/g,'')" clearable></el-input><br><br>
+        <div style="text-align: center">
+          <el-button type="primary" @click="updateScore(homeworkDrawer)" round>确认</el-button>
         </div>
       </div>
     </el-drawer>
@@ -198,6 +216,15 @@ export default {
     return {
       checkList: [],
       popoverVisible: false,
+      homeworkDrawer: {
+        title: '',
+        visible: false,
+        content: '',
+        writer: '',
+        time: '',
+        fileName: '',
+        score: '',
+      },
       showDrawer: {
         visible: false,
         title: '',
@@ -221,7 +248,7 @@ export default {
       homeworkForm: {
         title: '',
         content: '',
-        filename: '',
+        fileName: '',
         writer: '',
         time: ''
       },
@@ -279,6 +306,17 @@ export default {
       localStorage.setItem("isTeacher", JSON.stringify(this.$store.state.isTeacher));
       localStorage.setItem("user", JSON.stringify(this.$store.state.user));
     },
+    showHomeworkDrawer(item) {
+      this.homeworkDrawer = {
+        title: item.title,
+        content: item.content,
+        visible: true,
+        writer: item.writer,
+        fileName: item.fileName,
+        time: item.time,
+        score: item.score
+      }
+    },
     editInfo(title, items) {
       this.variousDrawers = {
         visible: true,
@@ -290,7 +328,7 @@ export default {
       this.showDrawer = {
         visible: true,
         title: item.title,
-        content: item.content
+        content: item
       }
       // console.log(this.drawerContent);
     },
@@ -416,12 +454,6 @@ export default {
                 message: '账号、密码或类型错误！',
               });
             }
-          })
-        } else {
-          this.userLogout()
-          this.$notify.error({
-            title: '登录失败',
-            message: '请正确填写信息！',
           });
         }
       });
@@ -448,12 +480,6 @@ export default {
               })
             }
           });
-        } else {
-          this.userLogout();
-          this.$notify.error({
-            title: '注册失败',
-            message: '请正确填写信息！',
-          })
         }
       });
     },
@@ -462,36 +488,74 @@ export default {
         if (this.$store.state.isLogin) {
           this.homeworkForm.writer = this.$store.state.user.name;
           if (valid) {
-            console.log("homeworkForm:")
-            console.log(this.homeworkForm)
-          } else {
-            console.log('error submit!!');
+            console.log("homeworkForm:");
+            console.log(this.homeworkForm);
+            this.$http.post("http://localhost:8090/saveHomework", this.homeworkForm).then(result => {
+              if (result.data) {
+                this.$store.commit('addHomework', JSON.parse(JSON.stringify(this.homeworkForm)));
+                this.$notify({
+                  title: "提交成功",
+                  type: "success"
+                });
+              } else {
+                this.$notify.error({
+                  title: "提交失败！",
+                  message: "标题不能重复！"
+                });
+              }
+            });
           }
-        } else {
-          this.$message.error("请登录！")
         }
       });
     },
     resetHomework(formName) {
       this.$refs[formName].resetFields();
+    },
+    handleHomeworkUpload(file) {
+      console.log("上传文件：");
+      console.log(file);
+      this.homeworkForm.fileName = file.name;
+      return true;
+    },
+    handleHomeworkRemove(file, fileList) {
+      console.log("移除文件：");
+      console.log(file);
+      this.homeworkForm.fileName = '';
+      return true;
+    },
+    updateScore(item) {
+      console.log("updateScore:");
+      console.log(item);
+      this.$http.post("http://localhost:8090/updateScore", item).then(result => {
+        if (result.data) {
+          this.$store.commit('updateScore', item);
+          this.$message({
+            message: "修改成功！",
+            type: 'success'
+          });
+        } else {
+          this.$message.error("修改失败！");
+        }
+      });
+      this.homeworkDrawer.visible = false;
     }
   },
   created() {
     this.$http.get("http://localhost:8090/getPPTs").then(result => {
       this.$store.commit('setPPTs', result.data);
-      // console.log(result.data);
     });
     this.$http.get("http://localhost:8090/getNews").then(result => {
       this.$store.commit('setNews', result.data);
-      // console.log(this.news[0].content);
     });
     this.$http.get("http://localhost:8090/getNotifications").then(result => {
       this.$store.commit('setNotifications', result.data);
-      // console.log(this.notifications[0].content);
     });
     this.$http.get("http://localhost:8090/getAssignments").then(result => {
       this.$store.commit('setAssignments', result.data);
     });
+    this.$http.get("http://localhost:8090/getHomeworks").then(result => {
+      this.$store.commit('setHomeworks', result.data);
+    })
     this.$store.commit('setIsLogin', JSON.parse(localStorage.getItem("isLogin")));
     this.$store.commit('setTeacher', JSON.parse(localStorage.getItem("isTeacher")));
     this.$store.commit('setUser', JSON.parse(localStorage.getItem("user")));

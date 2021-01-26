@@ -152,11 +152,11 @@ insert into ppt values ('5_ca.ppt', '丁箐', now());
 insert into ppt values ('5_ea.ppt', '丁箐', now());
 insert into ppt values ('5_ia.ppt', '丁箐', now());
 insert into ppt values ('6_Design the Arch.ppt', '丁箐', now());
-insert into ppt values ('6_Pattern and Style I.ppt', '丁箐', now());
+insert into ppt values ('6_Pattern and Style I.ppt', '丁箐', now());p
 insert into ppt values ('6_Pattern and Style II.ppt', '丁箐', now());
 insert into ppt values ('7_Distributed Architectures.ppt', '丁箐', now());
 insert into ppt values ('7_Frameworks.ppt', '丁箐', now());
-insert into ppt values ('7_Microservices.ptt', '丁箐', now());
+insert into ppt values ('7_Microservices.ppt', '丁箐', now());
 insert into ppt values ('7_MVC, MVP and MVVM A Comparison of Architectural Patterns.ppt', '丁箐', now());
 insert into ppt values ('7_Serverless architecture.ppt', '丁箐', now());
 insert into ppt values ('7_Service Architectures.ppt', '丁箐', now());
@@ -195,3 +195,4 @@ insert into assignment values ('分布式机群监管系统实验',
 insert into assignment values ('作业6',
                                'Under what circumstances can be it useful to use the Composite design pattern?',
                                'teacher', now());
+

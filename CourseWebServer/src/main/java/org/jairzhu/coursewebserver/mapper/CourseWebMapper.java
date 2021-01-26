@@ -25,6 +25,9 @@ public interface CourseWebMapper {
     @Select("select title, content, writer, time from courseInformation")
     public CourseInformation findCourseInformation();
 
+    @Select("select title, content, fileName, writer, time, score from homework")
+    public List<Homework> findAllHomeworks();
+
     @Insert("insert into user(name, password, type) values(#{name}, #{password}, #{type})")
     public void saveUser(User user);
 
@@ -43,6 +46,9 @@ public interface CourseWebMapper {
     @Insert("insert into courseInformation values(#{title}, #{content}, #{writer}, #{time})")
     public void saveCourseInformation(CourseInformation courseInformation);
 
+    @Insert("insert into homework values(#{title}, #{content}, #{fileName}, #{writer}, #{time}, #{score})")
+    public void saveHomework(Homework homework);
+
     @Delete("delete from news where title = #{title}")
     public void deleteNews(String title);
 
@@ -57,4 +63,7 @@ public interface CourseWebMapper {
 
     @Delete("delete from courseInformation where title = #{title}")
     public void deleteCourseInformation(String title);
+
+    @Update("update homework set score = #{score} where title = #{title}")
+    public void updateScore(Homework homework);
 }

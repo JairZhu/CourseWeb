@@ -12,7 +12,8 @@ const store = new Vuex.Store({
     assignments: [],
     news: [],
     ppts: [],
-    notifications: []
+    notifications: [],
+    homeworks: [],
   },
   mutations: {
     setIsLogin(state, online) {
@@ -36,6 +37,9 @@ const store = new Vuex.Store({
     setNotifications(state, item) {
       state.notifications = item;
     },
+    setHomeworks(state, item) {
+      state.homeworks = item;
+    },
     addNews(state, item) {
       state.news.push(item);
     },
@@ -48,6 +52,17 @@ const store = new Vuex.Store({
     addPPT(state, item) {
       state.ppts.push(item);
     },
+    addHomework(state, item) {
+      state.homeworks.push(item);
+    },
+    updateScore(state, item) {
+      for (let i = 0; i < state.homeworks.length; ++i) {
+        if (state.homeworks[i].title === item.title) {
+          state.homeworks[i].score = item.score;
+          return;
+        }
+      }
+    }
   },
   actions: {},
   getters: {},

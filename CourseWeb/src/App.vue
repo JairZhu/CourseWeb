@@ -2,10 +2,7 @@
   <div id="app">
     <el-row>
       <el-col :span="24" style="text-align: center;">
-        <el-image
-          style="width: 60px; height: 60px; vertical-align: middle"
-          :src="imageURL"
-          :fit="fill"></el-image>
+        <el-image style="width: 60px; height: 60px; vertical-align: middle" :src="imageURL" :fit="'fill'"></el-image>
         <span style="font-size: 30px; vertical-align: middle; margin-left: 10px">软件体系结构课程网页</span>
       </el-col>
     </el-row>
