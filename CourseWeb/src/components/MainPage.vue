@@ -77,7 +77,7 @@
                   :limit="1"
                   :disabled="!$store.state.isLogin">
                   <el-button size="small" type="primary" :disabled="!$store.state.isLogin">点击上传</el-button>
-                  <div slot="tip" class="el-upload__tip">只能上传pdf文件，且不超过10MB</div>
+                  <div slot="tip" class="el-upload__tip">只能上传pdf文件，且不超过20MB</div>
                 </el-upload>
               </el-form-item>
               <el-form-item label="时间" prop="time">
@@ -189,13 +189,19 @@
         </div>
       </div>
     </el-drawer>
-    <el-dialog :title="dialog.title" :visible.sync="dialog.visible">
+    <el-dialog :title="dialog.title" :visible.sync="dialog.visible" @close="dialog.isPPT = false">
       <el-form :model="dialog.form" :rules="editDialogFormRules" ref="editDialogForm" label-width="80px">
         <el-form-item label="标题" prop="title">
           <el-input v-model="dialog.form.title" placeholder="请输入标题" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="时间" prop="time">
           <el-date-picker v-model="dialog.form.time" type="datetime" placeholder="请选择日期时间"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="文件" v-if="dialog.isPPT">
+          <el-upload action="http://localhost:8090/uploadPPTFile" :limit="1" :before-upload="handlePPTUpload">
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传单个文件，且不超过20MB</div>
+          </el-upload>
         </el-form-item>
         <el-form-item label="内容" prop="content">
           <el-input type="textarea" :row="2" placeholder="请输入内容" v-model="dialog.form.content"></el-input>
@@ -238,6 +244,7 @@ export default {
       dialog: {
         title: '',
         visible: false,
+        isPPT: false,
         form: {
           title: '',
           content: '',
@@ -321,7 +328,7 @@ export default {
       this.variousDrawers = {
         visible: true,
         title: title,
-        content: items
+        content: items,
       }
     },
     getDrawerInfo(item) {
@@ -330,12 +337,14 @@ export default {
         title: item.title,
         content: item
       }
-      // console.log(this.drawerContent);
+      console.log("getDrawerInfo: ", this.drawerContent);
     },
     showEditDialog(title) {
       this.dialog.title = title;
       this.dialog.visible = true;
-      console.log("showEditDialog" + this.dialog);
+      if (title === "编辑课件")
+        this.dialog.isPPT = true;
+      console.log("showEditDialog:", this.dialog);
     },
     updateAddInfo(res, args) {
       if (res.data) {
@@ -431,14 +440,14 @@ export default {
             type: 'setPPTs',
             array: this.$store.state.ppts,
             checkList: checkList
-          })
+          });
         });
       }
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          // console.log(this.ruleForm);
+          console.log("submitForm: ", this.ruleForm);
           this.$http.post("http://localhost:8090/postUser", this.ruleForm).then(result => {
             if (result.data) {
               this.userLogin();
@@ -488,8 +497,7 @@ export default {
         if (this.$store.state.isLogin) {
           this.homeworkForm.writer = this.$store.state.user.name;
           if (valid) {
-            console.log("homeworkForm:");
-            console.log(this.homeworkForm);
+            console.log("homeworkForm:", this.homeworkForm);
             this.$http.post("http://localhost:8090/saveHomework", this.homeworkForm).then(result => {
               if (result.data) {
                 this.$store.commit('addHomework', JSON.parse(JSON.stringify(this.homeworkForm)));
@@ -511,21 +519,23 @@ export default {
     resetHomework(formName) {
       this.$refs[formName].resetFields();
     },
+    handlePPTUpload(file) {
+      console.log("上传课件：", file);
+      this.dialog.form.title = file.name;
+      return true;
+    },
     handleHomeworkUpload(file) {
-      console.log("上传文件：");
-      console.log(file);
+      console.log("上传文件：", file);
       this.homeworkForm.fileName = file.name;
       return true;
     },
     handleHomeworkRemove(file, fileList) {
-      console.log("移除文件：");
-      console.log(file);
+      console.log("移除文件：", file, fileList);
       this.homeworkForm.fileName = '';
       return true;
     },
     updateScore(item) {
-      console.log("updateScore:");
-      console.log(item);
+      console.log("updateScore:", item);
       this.$http.post("http://localhost:8090/updateScore", item).then(result => {
         if (result.data) {
           this.$store.commit('updateScore', item);

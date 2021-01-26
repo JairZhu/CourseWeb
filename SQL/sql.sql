@@ -19,7 +19,7 @@ create table `ppt` (
 
 create table `news` (
     `title` varchar(100) not null ,
-    `content` varchar(1000) not null ,
+    `content` varchar(10000) not null ,
     `writer` varchar(50) not null ,
     `time` timestamp not null ,
     primary key (title),
@@ -29,7 +29,7 @@ create table `news` (
 
 create table `notification` (
     `title` varchar(100) not null ,
-    `content` varchar(1000) not null ,
+    `content` varchar(10000) not null ,
     `writer` varchar(50) not null ,
     `time` timestamp not null ,
     primary key (title),
@@ -38,7 +38,7 @@ create table `notification` (
 
 create table `assignment` (
     `title` varchar(100) not null ,
-    `content` varchar(1000) not null ,
+    `content` varchar(10000) not null ,
     `writer` varchar(50) not null ,
     `time` timestamp not null ,
     primary key (title),
@@ -47,7 +47,7 @@ create table `assignment` (
 
 create table `homework` (
   `title` varchar(100) not null ,
-  `content` varchar(1000),
+  `content` varchar(10000),
   `fileName` varchar(1000),
   `writer` varchar(50) not null ,
   `time` timestamp not null ,
@@ -58,7 +58,7 @@ create table `homework` (
 
 create table `courseInformation` (
     `title` varchar(100) not null ,
-    `content` varchar(1000) not null ,
+    `content` varchar(10000) not null ,
     `writer` varchar(50) not null ,
     `time` timestamp not null ,
     primary key (title),
@@ -195,4 +195,3 @@ insert into assignment values ('分布式机群监管系统实验',
 insert into assignment values ('作业6',
                                'Under what circumstances can be it useful to use the Composite design pattern?',
                                'teacher', now());
-
