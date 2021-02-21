@@ -83,15 +83,7 @@ const store = new Vuex.Store({
     }
   },
   actions: {},
-  getters: {
-    getCommentByTitle(state, title) {
-      for (let v in state.comments) {
-        if (state.comments[v][0].title === title) {
-          return state.comments[v];
-        }
-      }
-    }
-  },
+  getters: {},
   modules: {}
 })
 

@@ -185,12 +185,19 @@ public class CourseWebController {
         }
     }
 
+    @PostMapping(value = "deleteCommentByTitle")
+    @ResponseBody
+    public boolean deleteCommentByTitle(@RequestBody List<String> titles) {
+        logger.info(titles.toString());
+        courseWebMapper.deleteCommentByTitle(titles.get(0));
+        return true;
+    }
+
     @PostMapping(value = "deleteComment")
     @ResponseBody
-    public boolean deleteComment(@RequestBody List<Comment> comments) {
-        logger.info(comments.toString());
-        for (Comment comment: comments)
-            courseWebMapper.deleteComment(comment);
+    public boolean deleteComment(@RequestBody Comment comment) {
+        logger.info(comment.toString());
+        courseWebMapper.deleteComment(comment);
         return true;
     }
 
