@@ -62,12 +62,36 @@ public class CourseWebController {
     @ResponseBody
     public List<CourseInformation> findCourseInformation() { return courseWebMapper.findCourseInformation();}
 
+    @RequestMapping(value = "getCommentTitles")
+    @ResponseBody
+    public List<String> findCommentTitles() { return courseWebMapper.findAllCommentTitle(); }
+
+    @RequestMapping(value = "getCommentByTitle")
+    @ResponseBody
+    public List<Comment> findCommentByTitle(@RequestParam String title) {
+        logger.info(title);
+        return courseWebMapper.findAllCommentByTitle(title);
+    }
+
     @PostMapping(value = "postUser")
     @ResponseBody
     public boolean userLogin(@RequestBody User user) {
         logger.info(user.toString());
         List<User> userList = courseWebMapper.findAllUsers();
         return userList.contains(user);
+    }
+
+    @PostMapping(value = "saveComment")
+    @ResponseBody
+    public boolean saveComment(@RequestBody Comment comment) {
+        logger.info(comment.toString());
+        try {
+            courseWebMapper.saveComment(comment);
+            return true;
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return false;
+        }
     }
 
     @PostMapping(value = "saveUser")
@@ -159,6 +183,15 @@ public class CourseWebController {
             exception.printStackTrace();
             return false;
         }
+    }
+
+    @PostMapping(value = "deleteComment")
+    @ResponseBody
+    public boolean deleteComment(@RequestBody List<Comment> comments) {
+        logger.info(comments.toString());
+        for (Comment comment: comments)
+            courseWebMapper.deleteComment(comment);
+        return true;
     }
 
     @PostMapping(value = "deleteNews")

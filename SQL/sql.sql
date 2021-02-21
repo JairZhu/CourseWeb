@@ -65,11 +65,34 @@ create table `courseInformation` (
     foreign key (writer) references user(name) on delete cascade on update cascade
 );
 
+create table `comment` (
+    `id` int auto_increment not null ,
+    `title` varchar(100) not null,
+    `content` varchar(1000) not null,
+    `writer` varchar(50) not null ,
+    `counterpart` varchar(50) not null,
+    `time` timestamp not null ,
+    primary key (id),
+    foreign key (writer) references user(name) on delete cascade on update cascade
+);
+
 insert into user values ('student', '1', false);
+insert into user values ('井中月lya', '1', false);
+insert into user values ('僵尸狗', '1', false);
+insert into user values ('SUMi_粟米', '1', false);
+insert into user values ('熊猫丢了猫', '1', false);
 insert into user values ('teacher', '1', true);
 insert into user values ('张波', '1', true);
 insert into user values ('沈茜', '1', true);
 insert into user values ('丁箐', '1', true);
+
+insert into comment values (0, '架构风格和架构模式的区别是什么？', '架构风格和架构模式的区别是什么？', 'SUMi_粟米', '', now());
+
+insert into comment(title, content, writer, counterpart, time) values ('如何在写项目时运用学到的设计模式？', '如何在写项目时运用学到的设计模式？', '熊猫丢了猫', '', now());
+
+insert into comment(title, content, writer, counterpart, time) values ('GKD学生前来报道', 'GKD学生前来报道', '井中月lya', '', now());
+
+insert into comment(title, content, writer, counterpart, time) values ('GKD学生前来报道', '奥力给', '僵尸狗', '井中月lya', now());
 
 insert into courseInformation values ('教学大纲', '课程编号：EIEN6008P
 

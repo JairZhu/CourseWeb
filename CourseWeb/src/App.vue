@@ -7,10 +7,10 @@
       </el-col>
     </el-row>
     <el-row type="flex" justify="center">
-      <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-        <el-menu-item index="mainPage">首页</el-menu-item>
-        <el-menu-item index="syllabus">教学大纲</el-menu-item>
-        <el-menu-item index="discuss">在线答疑</el-menu-item>
+      <el-menu mode="horizontal" @select="handleSelect">
+        <el-menu-item index="/mainPage">首页</el-menu-item>
+        <el-menu-item index="/syllabus">教学大纲</el-menu-item>
+        <el-menu-item index="/discussTitle">讨论区</el-menu-item>
       </el-menu>
     </el-row>
     <el-row>
@@ -26,13 +26,38 @@ export default {
   data() {
     return {
       imageURL: image,
-      activeIndex: 'mainPage',
     };
   },
   methods: {
     handleSelect(key, keyPath) {
       this.$router.push(key);
     }
+  },
+  created() {
+    this.$http.get("http://localhost:8090/getPPTs").then(result => {
+      this.$store.commit('setPPTs', result.data);
+    });
+    this.$http.get("http://localhost:8090/getNews").then(result => {
+      this.$store.commit('setNews', result.data);
+    });
+    this.$http.get("http://localhost:8090/getNotifications").then(result => {
+      this.$store.commit('setNotifications', result.data);
+    });
+    this.$http.get("http://localhost:8090/getAssignments").then(result => {
+      this.$store.commit('setAssignments', result.data);
+    });
+    this.$http.get("http://localhost:8090/getHomeworks").then(result => {
+      this.$store.commit('setHomeworks', result.data);
+    });
+    this.$http.get("http://localhost:8090/getCommentTitles").then(result => {
+      this.$store.commit('setDiscussTitle', result.data);
+    });
+    this.$store.commit('setIsLogin', JSON.parse(localStorage.getItem("isLogin")));
+    this.$store.commit('setTeacher', JSON.parse(localStorage.getItem("isTeacher")));
+    this.$store.commit('setUser', JSON.parse(localStorage.getItem("user")));
+    this.$http.get("http://localhost:8090/getCourseInformation").then(result => {
+      this.$store.commit('setCourseInformation', result.data[0]);
+    });
   }
 }
 </script>

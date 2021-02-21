@@ -49,7 +49,7 @@
             <span style="margin-left: 5px">作业查看</span>
           </div>
           <div>
-            <div v-for="i in $store.state.homeworks" :key="i" style="margin-bottom: 18px">
+            <div v-for="i in $store.state.homeworks" style="margin-bottom: 18px">
               <i class="el-icon-document"></i>
               <el-button type="text" @click="showHomeworkDrawer(i)">{{i.title}}</el-button>
             </div>
@@ -100,7 +100,7 @@
               <el-button type="text" @click="editInfo('编辑新闻', $store.state.news)">编辑</el-button>
             </span>
           </div>
-          <div v-for="i in $store.state.news" :key="i" style="margin-bottom: 18px">
+          <div v-for="i in $store.state.news" style="margin-bottom: 18px">
             <i class="el-icon-link"></i>
             <el-button type="text" @click="getDrawerInfo(i)">{{i.title}}</el-button>
           </div>
@@ -113,7 +113,7 @@
               <el-button type="text" @click="editInfo('编辑通知', $store.state.notifications)">编辑</el-button>
             </span>
           </div>
-          <div v-for="i in $store.state.notifications" :key="i" style="margin-bottom: 18px">
+          <div v-for="i in $store.state.notifications" style="margin-bottom: 18px">
             <i class="el-icon-position"></i>
             <el-button type="text" @click="getDrawerInfo(i)">{{i.title}}</el-button>
           </div>
@@ -128,7 +128,7 @@
               <el-button type="text" @click="editInfo('编辑作业', $store.state.assignments)">编辑</el-button>
             </span>
           </div>
-          <div v-for="i in $store.state.assignments" :key="i" style="margin-bottom: 18px">
+          <div v-for="i in $store.state.assignments" style="margin-bottom: 18px">
             <i class="el-icon-notebook-1"></i>
             <el-button type="text" @click="getDrawerInfo(i)">{{i.title}}</el-button>
           </div>
@@ -157,7 +157,7 @@
     <el-drawer :title="variousDrawers.title" :visible.sync="variousDrawers.visible" :direction="'ltr'">
       <div style="margin-left: 20px">
         <el-checkbox-group v-model="checkList" style="">
-          <span v-for="i in variousDrawers.content" :key="i">
+          <span v-for="i in variousDrawers.content">
             <el-checkbox  :label="i.title"></el-checkbox> <br>
           </span>
         </el-checkbox-group>
@@ -189,7 +189,7 @@
         </div>
       </div>
     </el-drawer>
-    <el-dialog :title="dialog.title" :visible.sync="dialog.visible" @close="dialog.isPPT = false">
+    <el-dialog :title="dialog.title" :visible.sync="dialog.visible" @close="dialog.isPPT = false" :before-close="handleClose">
       <el-form :model="dialog.form" :rules="editDialogFormRules" ref="editDialogForm" label-width="80px">
         <el-form-item label="标题" prop="title">
           <el-input v-model="dialog.form.title" placeholder="请输入标题" auto-complete="off"></el-input>
@@ -314,6 +314,13 @@ export default {
       localStorage.setItem("isTeacher", JSON.stringify(this.$store.state.isTeacher));
       localStorage.setItem("user", JSON.stringify(this.$store.state.user));
     },
+    handleClose() {
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          this.dialog.visible = false;
+        })
+        .catch(_ => {});
+    },
     showHomeworkDrawer(item) {
       this.homeworkDrawer = {
         title: item.title,
@@ -338,14 +345,14 @@ export default {
         title: item.title,
         content: item
       }
-      console.log("getDrawerInfo: ", this.drawerContent);
+      // console.log("getDrawerInfo: ", this.drawerContent);
     },
     showEditDialog(title) {
       this.dialog.title = title;
       this.dialog.visible = true;
       if (title === "编辑课件")
         this.dialog.isPPT = true;
-      console.log("showEditDialog:", this.dialog);
+      // console.log("showEditDialog:", this.dialog);
     },
     updateAddInfo(res, args) {
       if (res.data) {
@@ -448,7 +455,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log("submitForm: ", this.ruleForm);
+          // console.log("submitForm: ", this.ruleForm);
           this.$http.post("http://localhost:8090/postUser", this.ruleForm).then(result => {
             if (result.data) {
               this.userLogin();
@@ -498,7 +505,7 @@ export default {
         if (this.$store.state.isLogin) {
           this.homeworkForm.writer = this.$store.state.user.name;
           if (valid) {
-            console.log("homeworkForm:", this.homeworkForm);
+            // console.log("homeworkForm:", this.homeworkForm);
             this.$http.post("http://localhost:8090/saveHomework", this.homeworkForm).then(result => {
               if (result.data) {
                 this.$store.commit('addHomework', JSON.parse(JSON.stringify(this.homeworkForm)));
@@ -518,22 +525,22 @@ export default {
       });
     },
     handlePPTUpload(file) {
-      console.log("上传课件：", file);
+      // console.log("上传课件：", file);
       this.dialog.form.title = file.name;
       return true;
     },
     handleHomeworkUpload(file) {
-      console.log("上传文件：", file);
+      // console.log("上传文件：", file);
       this.homeworkForm.fileName = file.name;
       return true;
     },
     handleHomeworkRemove(file, fileList) {
-      console.log("移除文件：", file, fileList);
+      // console.log("移除文件：", file, fileList);
       this.homeworkForm.fileName = '';
       return true;
     },
     updateScore(item) {
-      console.log("updateScore:", item);
+      // console.log("updateScore:", item);
       this.$http.post("http://localhost:8090/updateScore", item).then(result => {
         if (result.data) {
           this.$store.commit('updateScore', item);
@@ -548,26 +555,6 @@ export default {
       this.homeworkDrawer.visible = false;
     }
   },
-  created() {
-    this.$http.get("http://localhost:8090/getPPTs").then(result => {
-      this.$store.commit('setPPTs', result.data);
-    });
-    this.$http.get("http://localhost:8090/getNews").then(result => {
-      this.$store.commit('setNews', result.data);
-    });
-    this.$http.get("http://localhost:8090/getNotifications").then(result => {
-      this.$store.commit('setNotifications', result.data);
-    });
-    this.$http.get("http://localhost:8090/getAssignments").then(result => {
-      this.$store.commit('setAssignments', result.data);
-    });
-    this.$http.get("http://localhost:8090/getHomeworks").then(result => {
-      this.$store.commit('setHomeworks', result.data);
-    })
-    this.$store.commit('setIsLogin', JSON.parse(localStorage.getItem("isLogin")));
-    this.$store.commit('setTeacher', JSON.parse(localStorage.getItem("isTeacher")));
-    this.$store.commit('setUser', JSON.parse(localStorage.getItem("user")));
-  }
 }
 </script>
 

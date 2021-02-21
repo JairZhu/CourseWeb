@@ -15,8 +15,16 @@ const store = new Vuex.Store({
     notifications: [],
     homeworks: [],
     courseInformation: '',
+    discussTitle: [],
+    comments: [],
   },
   mutations: {
+    setDiscussTitle(state, item) {
+      state.discussTitle = item;
+    },
+    setComment(state, item) {
+      state.comments = item;
+    },
     setIsLogin(state, online) {
       state.isLogin = online;
     },
@@ -59,6 +67,12 @@ const store = new Vuex.Store({
     addHomework(state, item) {
       state.homeworks.push(item);
     },
+    addDiscussTitle(state, item) {
+      state.discussTitle.push(item);
+    },
+    addComment(state, item) {
+      state.comments.data.push(item);
+    },
     updateScore(state, item) {
       for (let i = 0; i < state.homeworks.length; ++i) {
         if (state.homeworks[i].title === item.title) {
@@ -69,7 +83,15 @@ const store = new Vuex.Store({
     }
   },
   actions: {},
-  getters: {},
+  getters: {
+    getCommentByTitle(state, title) {
+      for (let v in state.comments) {
+        if (state.comments[v][0].title === title) {
+          return state.comments[v];
+        }
+      }
+    }
+  },
   modules: {}
 })
 

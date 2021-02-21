@@ -2,7 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import MainPage from "../components/MainPage";
 import Syllabus from "../components/Syllabus";
-import Discuss from "../components/Discuss";
+import Comment from "../components/Comment";
+import DiscussTitle from "../components/DiscussTitle";
 
 Vue.use(Router)
 
@@ -14,18 +15,19 @@ export default new Router({
     },
     {
       path:'/mainPage',
-      name:'mainPage',
       component: MainPage
     },
     {
       path: '/syllabus',
-      name: 'syllabus',
       component: Syllabus
     },
     {
-      path: '/discuss',
-      name: 'discuss',
-      component: Discuss
+      path: '/discussTitle',
+      component: DiscussTitle
     },
+    {
+      path: '/comment',
+      component: Comment
+    }
   ]
 })
