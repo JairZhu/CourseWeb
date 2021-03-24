@@ -12,6 +12,7 @@ const store = new Vuex.Store({
     assignments: [],
     news: [],
     ppts: [],
+    videos:[],
     notifications: [],
     homeworks: [],
     courseInformation: '',
@@ -43,6 +44,9 @@ const store = new Vuex.Store({
     setPPTs(state, item) {
       state.ppts = item;
     },
+    setVideos(state, item) {
+      state.videos = item;
+    },
     setNotifications(state, item) {
       state.notifications = item;
     },
@@ -63,6 +67,9 @@ const store = new Vuex.Store({
     },
     addPPT(state, item) {
       state.ppts.push(item);
+    },
+    addVideo(state,item){
+      state.videos.push(item);
     },
     addHomework(state, item) {
       state.homeworks.push(item);

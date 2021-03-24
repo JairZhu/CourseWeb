@@ -4,7 +4,7 @@ import MainPage from "../components/MainPage";
 import Syllabus from "../components/Syllabus";
 import Comment from "../components/Comment";
 import DiscussTitle from "../components/DiscussTitle";
-
+import videoPage from "../components/videoPage";
 Vue.use(Router)
 
 export default new Router({
@@ -28,6 +28,10 @@ export default new Router({
     {
       path: '/comment',
       component: Comment
+    },
+    {
+      path: '/videoPage',
+      component: videoPage
     }
   ]
 })

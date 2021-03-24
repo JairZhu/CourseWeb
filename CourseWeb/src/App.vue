@@ -11,6 +11,7 @@
         <el-menu-item index="/mainPage">首页</el-menu-item>
         <el-menu-item index="/syllabus">教学大纲</el-menu-item>
         <el-menu-item index="/discussTitle">讨论区</el-menu-item>
+        <el-menu-item index="/videoPage">视频区</el-menu-item>
       </el-menu>
     </el-row>
     <el-row>
@@ -36,6 +37,9 @@ export default {
   created() {
     this.$http.get("http://localhost:8090/getPPTs").then(result => {
       this.$store.commit('setPPTs', result.data);
+    });
+    this.$http.get("http://localhost:8090/getVideos").then(result => {
+      this.$store.commit('setVideos', result.data);
     });
     this.$http.get("http://localhost:8090/getNews").then(result => {
       this.$store.commit('setNews', result.data);

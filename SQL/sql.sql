@@ -17,6 +17,14 @@ create table `ppt` (
     foreign key (writer) references user(name) on delete cascade on update cascade
 );
 
+create table `video` (
+    `title` varchar(100) not null ,
+    `writer` varchar(50) not null ,
+    `time` timestamp not null ,
+    primary key (title),
+    foreign key (writer) references user(name) on delete cascade on update cascade
+);
+
 create table `news` (
     `title` varchar(100) not null ,
     `content` varchar(10000) not null ,
@@ -85,6 +93,7 @@ insert into user values ('teacher', '1', true);
 insert into user values ('张波', '1', true);
 insert into user values ('沈茜', '1', true);
 insert into user values ('丁箐', '1', true);
+insert into user values ('zkl', '1', true);
 
 insert into comment values (0, '架构风格和架构模式的区别是什么？', '架构风格和架构模式的区别是什么？', 'SUMi_粟米', '', now());
 
@@ -197,7 +206,7 @@ insert into ppt values ('5_ca.ppt', '丁箐', now());
 insert into ppt values ('5_ea.ppt', '丁箐', now());
 insert into ppt values ('5_ia.ppt', '丁箐', now());
 insert into ppt values ('6_Design the Arch.ppt', '丁箐', now());
-insert into ppt values ('6_Pattern and Style I.ppt', '丁箐', now());p
+insert into ppt values ('6_Pattern and Style I.ppt', '丁箐', now());
 insert into ppt values ('6_Pattern and Style II.ppt', '丁箐', now());
 insert into ppt values ('7_Distributed Architectures.ppt', '丁箐', now());
 insert into ppt values ('7_Frameworks.ppt', '丁箐', now());
@@ -240,3 +249,13 @@ insert into assignment values ('分布式机群监管系统实验',
 insert into assignment values ('作业6',
                                'Under what circumstances can be it useful to use the Composite design pattern?',
                                'teacher', now());
+insert into ppt values ('数据结构与算法01概论.flv', 'zkl', now());
+insert into ppt values ('数据结构与算法01-A-1计算.flv', 'zkl', now());
+insert into ppt values ('数据结构与算法01-A-2算法有穷性.flv', 'zkl', now());
+insert into ppt values ('数据结构与算法01-A-3好算法.flv', 'zkl', now());
+insert into ppt values ('数据结构与算法01-B-1计算模型.flv', 'zkl', now());
+insert into ppt values ('数据结构与算法01-B-2图灵机.flv', 'zkl', now());
+insert into ppt values ('数据结构与算法01-B-3RAM.flv', 'zkl', now());
+insert into ppt values ('数据结构与算法01-C-1大O.flv', 'zkl', now());
+insert into ppt values ('数据结构与算法01-C-2bigΩ、bigΘ.flv', 'zkl', now());
+insert into ppt values ('数据结构与算法01-C-3复杂度总结.flv', 'zkl', now());

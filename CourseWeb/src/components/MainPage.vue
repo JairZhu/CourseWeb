@@ -70,7 +70,7 @@
               </el-form-item>
               <el-form-item label="文件">
                 <el-upload
-                  action="http://localhost:8090/uploadHomeworkFile"
+                  action="http://localhost:8090/uploadFile/homework"
                   accept=".pdf"
                   :before-upload="handleHomeworkUpload"
                   :before-remove="handleHomeworkRemove"
@@ -198,7 +198,7 @@
           <el-date-picker v-model="dialog.form.time" type="datetime" placeholder="请选择日期时间"></el-date-picker>
         </el-form-item>
         <el-form-item label="文件" v-if="dialog.isPPT">
-          <el-upload action="http://localhost:8090/uploadPPTFile" :limit="1" :before-upload="handlePPTUpload">
+          <el-upload action="http://localhost:8090/uploadFile/ppt" :limit="1" :before-upload="handlePPTUpload">
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传单个文件，且不超过20MB</div>
           </el-upload>

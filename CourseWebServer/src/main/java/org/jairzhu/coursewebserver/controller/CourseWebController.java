@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -24,6 +25,7 @@ import java.util.*;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @EnableAutoConfiguration
 public class CourseWebController {
+
 
     private final Logger logger = LoggerFactory.getLogger(CourseWebController.class);
 
@@ -253,30 +255,45 @@ public class CourseWebController {
         return true;
     }
 
-    @PostMapping(value = "uploadHomeworkFile")
-    @ResponseBody
-    public boolean uploadHomeworkFile(@RequestParam("file") MultipartFile file) {
-        logger.info(System.getProperty("user.dir"));
-        String originName = file.getOriginalFilename();
-        try {
-            file.transferTo(new File(System.getProperty("user.dir")+"/src/main/resources/static/homework", originName));
-            return true;
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            return false;
-        }
-    }
+//    @PostMapping(value = "uploadHomeworkFile")
+//    @ResponseBody
+//    public boolean uploadHomeworkFile(@RequestParam("file") MultipartFile file) {
+//        logger.info(System.getProperty("user.dir"));
+//        String originName = file.getOriginalFilename();
+//        try {
+//            file.transferTo(new File(System.getProperty("user.dir")+"/src/main/resources/static/homework", originName));
+//            return true;
+//        } catch (Exception exception) {
+//            exception.printStackTrace();
+//            return false;
+//        }
+//    }
 
-    @PostMapping(value = "uploadPPTFile")
+//    @PostMapping(value = "uploadPPTFile")
+//    @ResponseBody
+//    public boolean uploadPPTFile(@RequestParam("file") MultipartFile file) {
+//        logger.info(System.getProperty("user.dir"));
+//        String originName = file.getOriginalFilename();
+//        try {
+//            file.transferTo(new File(System.getProperty("user.dir")+"/src/main/resources/static/ppt", originName));
+//            return true;
+//        } catch (Exception exception) {
+//            exception.printStackTrace();
+//            return false;
+//        }
+//    }
+
+    @PostMapping(value = "uploadFile/{type}")
     @ResponseBody
-    public boolean uploadPPTFile(@RequestParam("file") MultipartFile file) {
-        logger.info(System.getProperty("user.dir"));
-        String originName = file.getOriginalFilename();
+    public boolean uploadFile(@PathVariable(name="type")String type,@RequestParam("file") MultipartFile file) {
+        String filename = file.getOriginalFilename();
+        logger.info("uploadFile"+System.getProperty("user.dir")+filename);
         try {
-            file.transferTo(new File(System.getProperty("user.dir")+"/src/main/resources/static/ppt", originName));
+            file.transferTo(new File(System.getProperty("user.dir") + "/src/main/resources/static/"+type, filename));
+
             return true;
-        } catch (Exception exception) {
-            exception.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
             return false;
         }
     }
