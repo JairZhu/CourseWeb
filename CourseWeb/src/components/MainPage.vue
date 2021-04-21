@@ -204,7 +204,7 @@
           </el-upload>
         </el-form-item>
         <el-form-item label="内容" prop="content">
-          <el-input type="textarea" :rows="4" placeholder="请输入内容" v-model="dialog.form.content"></el-input>
+          <el-input type="textarea" :row="4" placeholder="请输入内容" v-model="dialog.form.content"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" style="text-align: right">

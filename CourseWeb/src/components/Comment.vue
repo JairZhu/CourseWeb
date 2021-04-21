@@ -19,7 +19,6 @@
                 </div>
                 <div style="text-align: right">
                   <el-button type="text" icon="el-icon-chat-square" @click="showResponse(i.writer)" circle></el-button>
-                  <el-button v-if="$store.state.isTeacher" type="text" icon="el-icon-delete" @click="deleteComment(i)" circle></el-button>
                 </div>
               </el-card>
             </div>
@@ -70,39 +69,15 @@ export default {
     }
   },
   methods: {
-    deleteComment(comment) {
-      this.$confirm('确认删除？')
-        .then(_ => {
-          this.$http.post("http://localhost:8090/deleteComment", comment).then(result => {
-            if (result.data) {
-              this.$notify({
-                type: "success",
-                title: "删除成功！"
-              });
-              this.$http.get("http://localhost:8090/getCommentByTitle", {params: {title: this.$route.query.title}}).then(res => {
-                this.$store.commit('setComment', res);
-                if (res.data.length === 0) {
-                  let str = this.$route.query.title;
-                  this.$store.commit('setDiscussTitle', this.$store.state.discussTitle.filter(function (v) { return str !== v}));
-                  this.$router.back();
-                }
-              });
-            }
-          })
-        })
-        .catch(_ => {});
-    },
     showEdit() {
       this.show = true;
       this.tips = '请输入内容';
       this.form.counterpart = '';
-      this.form.content = '';
     },
     showResponse(counterpart) {
       this.show = true;
       this.tips = '回复：@' + counterpart;
       this.form.counterpart = counterpart;
-      this.form.content = '';
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
@@ -128,7 +103,7 @@ export default {
         this.$message.error("请先登录！");
         this.$router.push('/mainPage');
       }
-    },
+    }
   },
   created() {
     this.$http.get("http://localhost:8090/getCommentByTitle", {params: {title: this.$route.query.title}}).then(res => {

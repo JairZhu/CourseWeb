@@ -58,12 +58,9 @@ public interface CourseWebMapper {
     @Insert("insert into homework values(#{title}, #{content}, #{fileName}, #{writer}, #{time}, #{score})")
     public void saveHomework(Homework homework);
 
-    @Delete("delete from comment where title = #{title} and content = #{content} and writer = #{writer} and " +
+    @Delete("delete from comment where title = #{title} and content = #{content} and writer = #{writer} and" +
             "counterpart = #{counterpart} and time = #{time}")
     public void deleteComment(Comment comment);
-
-    @Delete("delete from comment where title = #{title}")
-    public void deleteCommentByTitle(String title);
 
     @Delete("delete from news where title = #{title}")
     public void deleteNews(String title);
