@@ -249,13 +249,13 @@ insert into assignment values ('分布式机群监管系统实验',
 insert into assignment values ('作业6',
                                'Under what circumstances can be it useful to use the Composite design pattern?',
                                'teacher', now());
-insert into ppt values ('数据结构与算法01概论.flv', 'zkl', now());
-insert into ppt values ('数据结构与算法01-A-1计算.flv', 'zkl', now());
-insert into ppt values ('数据结构与算法01-A-2算法有穷性.flv', 'zkl', now());
-insert into ppt values ('数据结构与算法01-A-3好算法.flv', 'zkl', now());
-insert into ppt values ('数据结构与算法01-B-1计算模型.flv', 'zkl', now());
-insert into ppt values ('数据结构与算法01-B-2图灵机.flv', 'zkl', now());
-insert into ppt values ('数据结构与算法01-B-3RAM.flv', 'zkl', now());
-insert into ppt values ('数据结构与算法01-C-1大O.flv', 'zkl', now());
-insert into ppt values ('数据结构与算法01-C-2bigΩ、bigΘ.flv', 'zkl', now());
-insert into ppt values ('数据结构与算法01-C-3复杂度总结.flv', 'zkl', now());
+insert into video values ('数据结构与算法01概论.flv', 'zkl', now());
+insert into video values ('数据结构与算法01-A-1计算.flv', 'zkl', now());
+insert into video values ('数据结构与算法01-A-2算法有穷性.flv', 'zkl', now());
+insert into video values ('数据结构与算法01-A-3好算法.flv', 'zkl', now());
+insert into video values ('数据结构与算法01-B-1计算模型.flv', 'zkl', now());
+insert into video values ('数据结构与算法01-B-2图灵机.flv', 'zkl', now());
+insert into video values ('数据结构与算法01-B-3RAM.flv', 'zkl', now());
+insert into video values ('数据结构与算法01-C-1大O.flv', 'zkl', now());
+insert into video values ('数据结构与算法01-C-2bigΩ、bigΘ.flv', 'zkl', now());
+insert into video values ('数据结构与算法01-C-3复杂度总结.flv', 'zkl', now());

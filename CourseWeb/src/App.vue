@@ -12,6 +12,7 @@
         <el-menu-item index="/syllabus">教学大纲</el-menu-item>
         <el-menu-item index="/discussTitle">讨论区</el-menu-item>
         <el-menu-item index="/videoPage">视频区</el-menu-item>
+        <el-menu-item index="/personInfo">用户中心</el-menu-item>
       </el-menu>
     </el-row>
     <el-row>

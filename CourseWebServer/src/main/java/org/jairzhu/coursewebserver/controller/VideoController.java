@@ -1,6 +1,6 @@
 package org.jairzhu.coursewebserver.controller;
 
-import lombok.AllArgsConstructor;
+
 import org.jairzhu.coursewebserver.domain.NonStaticResourceHttpRequestHandler;
 import org.jairzhu.coursewebserver.domain.Video;
 import org.jairzhu.coursewebserver.mapper.CourseWebMapper;
@@ -33,15 +33,19 @@ import java.util.List;
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @EnableAutoConfiguration
-@AllArgsConstructor
 public class VideoController {
 
     private final Logger logger = LoggerFactory.getLogger(CourseWebController.class);
-
+    @Autowired
     private final NonStaticResourceHttpRequestHandler nonStaticResourceHttpRequestHandler;
 
     @Autowired
     private CourseWebMapper courseWebMapper;
+
+    public VideoController(NonStaticResourceHttpRequestHandler nonStaticResourceHttpRequestHandler, CourseWebMapper courseWebMapper) {
+        this.nonStaticResourceHttpRequestHandler = nonStaticResourceHttpRequestHandler;
+        this.courseWebMapper = courseWebMapper;
+    }
 
     @PostMapping(value = "deleteVideo")
     @ResponseBody

@@ -91,4 +91,6 @@ public interface CourseWebMapper {
 
     @Update("update homework set score = #{score} where title = #{title}")
     public void updateScore(Homework homework);
+    @Update("update user set password = #{password} where name = #{name}")
+    public void updatePwd(User user);
 }
