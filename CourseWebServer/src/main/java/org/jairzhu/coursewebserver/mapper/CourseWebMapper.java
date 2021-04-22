@@ -31,7 +31,7 @@ public interface CourseWebMapper {
     @Select("select distinct title from comment order by time")
     public List<String> findAllCommentTitle();
 
-    @Select("select title, content, writer, counterpart, time from comment where title = #{title} order by time")
+    @Select("select id, title, content, writer, counterpart, time from comment where title = #{title} order by time")
     public List<Comment> findAllCommentByTitle(String title);
 
     @Insert("insert into comment(title, content, writer, counterpart, time) values(#{title}, #{content}, #{writer}, #{counterpart}, #{time})")

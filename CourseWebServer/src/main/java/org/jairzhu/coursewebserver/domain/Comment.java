@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Objects;
 
 public class Comment {
+    private int id;
     private String title;
     private String content;
     private String writer;
@@ -11,27 +12,24 @@ public class Comment {
     private Date time;
 
     @Override
-    public String toString() {
-        return "Comment{" +
-                "title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", writer='" + writer + '\'' +
-                ", counterpart='" + counterpart + '\'' +
-                ", time=" + time +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Comment)) return false;
         Comment comment = (Comment) o;
-        return Objects.equals(title, comment.title) && Objects.equals(content, comment.content) && Objects.equals(writer, comment.writer) && Objects.equals(counterpart, comment.counterpart) && Objects.equals(time, comment.time);
+        return id == comment.id && Objects.equals(title, comment.title) && Objects.equals(content, comment.content) && Objects.equals(writer, comment.writer) && Objects.equals(counterpart, comment.counterpart) && Objects.equals(time, comment.time);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, content, writer, counterpart, time);
+        return Objects.hash(id, title, content, writer, counterpart, time);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {
