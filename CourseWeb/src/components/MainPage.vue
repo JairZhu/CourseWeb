@@ -9,8 +9,8 @@
           </div>
           <div>
             <div style="text-align: center">
-              <el-image v-if="$store.state.isTeacher" :src="require('@/assets/teacher.png')" :fit="'contain'" style="width: 150px; height: 150px;"></el-image>
-              <el-image v-else :src="require('@/assets/student.png')" :fit="'contain'" style="width: 150px; height: 150px;"></el-image><br>
+              <el-image class="headPhoto" v-if="$store.state.isTeacher" :src="imgUrl" :fit="'contain'" style="width: 100px; height: 100px;"></el-image>
+              <el-image class="headPhoto" v-else :src="imgUrl" :fit="'contain'" style="width: 100px; height: 100px;"></el-image><br>
               <span>{{$store.state.user.name}}</span><br>
               <el-button type="danger" @click="userLogout" style="margin-top: 10px" round>退出</el-button>
             </div>
@@ -70,7 +70,7 @@
               </el-form-item>
               <el-form-item label="文件">
                 <el-upload
-                  action="http://localhost:8090/uploadHomeworkFile"
+                  action="http://localhost:8090/uploadFile/homework"
                   accept=".pdf"
                   :before-upload="handleHomeworkUpload"
                   :before-remove="handleHomeworkRemove"
@@ -180,7 +180,7 @@
     <el-drawer :title="homeworkDrawer.title" :visible.sync="homeworkDrawer.visible" :direction="'rtl'">
       <div style="margin-left: 20px; margin-right: 20px;margin-bottom: 20px">
         <span>作者：{{homeworkDrawer.writer}}</span> <br><br>
-<!--        <p style="text-indent: 20px">{{homeworkDrawer.time}}</p>-->
+        <!--        <p style="text-indent: 20px">{{homeworkDrawer.time}}</p>-->
         <span style="line-height: 150%; white-space: pre-wrap">内容：{{homeworkDrawer.content}}</span><br><br>
         文件：<el-link type="primary" :href="'http://localhost:8090/downloadFile/homework/'+ homeworkDrawer.fileName">{{homeworkDrawer.fileName}}</el-link><br><br>
         分数：<el-input v-model="homeworkDrawer.score" placeholder="请输入分数" style="width: 120px" oninput="value=value.replace(/[^\d]/g,'')" clearable></el-input><br><br>
@@ -198,7 +198,7 @@
           <el-date-picker v-model="dialog.form.time" type="datetime" placeholder="请选择日期时间"></el-date-picker>
         </el-form-item>
         <el-form-item label="文件" v-if="dialog.isPPT">
-          <el-upload action="http://localhost:8090/uploadPPTFile" :limit="1" :before-upload="handlePPTUpload">
+          <el-upload action="http://localhost:8090/uploadFile/ppt" :limit="1" :before-upload="handlePPTUpload">
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传单个文件，且不超过20MB</div>
           </el-upload>
@@ -221,6 +221,7 @@ export default {
   name: "MainPage",
   data() {
     return {
+      imgUrl: 'http://localhost:8090/headPhoto/'+this.$store.state.user.name+'.jpg',
       checkList: [],
       popoverVisible: false,
       homeworkDrawer: {
@@ -567,5 +568,9 @@ export default {
 }
 .el-drawer__body {
   overflow: auto;
+}
+
+.headPhoto{
+  border-radius: 100px;
 }
 </style>

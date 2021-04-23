@@ -16,6 +16,9 @@ public interface CourseWebMapper {
     @Select("select title, writer, time from ppt")
     public List<PPT> findAllPPTs();
 
+    @Select("select title, writer, time from video")
+    public List<Video> findAllVideos();
+
     @Select("select title, content, writer, time from assignment")
     public List<Assignment> findAllAssignment();
 
@@ -43,6 +46,9 @@ public interface CourseWebMapper {
     @Insert("insert into ppt values(#{title}, #{writer}, #{time})")
     public void savePPT(PPT ppt);
 
+    @Insert("insert into video values(#{title},#{writer},#{time})")
+    public void saveVideo(Video video);
+
     @Insert("insert into news values(#{title}, #{content}, #{writer}, #{time})")
     public void saveNews(News news);
 
@@ -68,6 +74,9 @@ public interface CourseWebMapper {
     @Delete("delete from ppt where title = #{title}")
     public void deletePPT(String title);
 
+    @Delete("delete from video where title = #{title}")
+    public void deleteVideo(String title);
+
     @Delete("delete from notification where title = #{title}")
     public void deleteNotifications(String title);
 
@@ -79,4 +88,6 @@ public interface CourseWebMapper {
 
     @Update("update homework set score = #{score} where title = #{title}")
     public void updateScore(Homework homework);
+    @Update("update user set password = #{password} where name = #{name}")
+    public void updatePwd(User user);
 }
