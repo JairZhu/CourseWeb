@@ -4,6 +4,7 @@ package org.jairzhu.coursewebserver.controller;
 import org.jairzhu.coursewebserver.domain.Comment;
 import org.jairzhu.coursewebserver.domain.User;
 import org.jairzhu.coursewebserver.mapper.CourseWebMapper;
+import org.jairzhu.coursewebserver.redisUtils.RedisHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class UserInfoController {
     private final Logger logger = LoggerFactory.getLogger(CourseWebController.class);
 
     @Autowired
-    private CourseWebMapper courseWebMapper;
+    private RedisHandler courseWebMapper;
 
     @PostMapping(value = "updatePwd")
     @ResponseBody

@@ -296,4 +296,43 @@ public final class RedisHandler {
         ObjectMapper objectMapper = new ObjectMapper();
         redisUtils.set("homework-" + homework.getTitle(), objectMapper.writeValueAsString(homework));
     }
+
+    public List<Video> findAllVideos() throws JsonProcessingException {
+        List<Video> objectList;
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<String> titleList = redisUtils.lGet("AllVideos", 0, -1);
+        if (titleList == null || titleList.size() == 0) {
+            objectList = courseWebMapper.findAllVideos();
+            for (Video object : objectList) {
+                redisUtils.lSet("AllVideos", "video-" + object.getTitle());
+                redisUtils.set("video-" + object.getTitle(), objectMapper.writeValueAsString(object));
+            }
+        }
+        else {
+            objectList = new ArrayList<>();
+            for (String title: titleList) {
+                objectList.add(objectMapper.readValue(redisUtils.get(title), Video.class));
+            }
+        }
+        return objectList;
+    }
+
+    public void saveVideo(Video video) throws JsonProcessingException {
+        courseWebMapper.saveVideo(video);
+        ObjectMapper objectMapper = new ObjectMapper();
+        redisUtils.lSet("AllVideos", "video-" + video.getTitle());
+        redisUtils.set("video-" + video.getTitle(), objectMapper.writeValueAsString(video));
+    }
+
+    public void deleteVideo(String title) {
+        courseWebMapper.deleteVideo(title);
+        redisUtils.lRemove("AllVideos", 1, "video-" + title);
+        redisUtils.del("video-" + title);
+    }
+
+    public void updatePwd(User user) throws JsonProcessingException {
+        courseWebMapper.updatePwd(user);
+        ObjectMapper objectMapper = new ObjectMapper();
+        redisUtils.set("user-" + user.getName(), objectMapper.writeValueAsString(user));
+    }
 }
