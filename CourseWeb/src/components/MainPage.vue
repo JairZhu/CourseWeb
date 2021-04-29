@@ -243,7 +243,7 @@ export default {
         title: '',
         content: '',
       },
-      ndialog: {
+      dialog: {
         title: '',
         visible: false,
         isPPT: false,
