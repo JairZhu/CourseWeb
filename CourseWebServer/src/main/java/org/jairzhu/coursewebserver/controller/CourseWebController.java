@@ -32,7 +32,7 @@ public class CourseWebController {
     private final Logger logger = LoggerFactory.getLogger(CourseWebController.class);
 
     @Autowired
-    private RedisHandler courseWebMapper;
+    private CourseWebMapper courseWebMapper;
 
     @RequestMapping(value = "getNews")
     @ResponseBody
@@ -68,7 +68,16 @@ public class CourseWebController {
 
     @RequestMapping(value = "getCommentTitles")
     @ResponseBody
-    public List<String> findCommentTitles() throws JsonProcessingException { return courseWebMapper.findAllCommentTitle(); }
+    public List<String> findCommentTitles() throws JsonProcessingException {
+        List<String> src = courseWebMapper.findAllCommentTitle();
+        List<String> res = new ArrayList<>();
+        for (String s : src) {
+            if (!res.contains(s)) {
+                res.add(s);
+            }
+        }
+        return res;
+    }
 
     @RequestMapping(value = "getCommentByTitle")
     @ResponseBody
@@ -189,14 +198,14 @@ public class CourseWebController {
         }
     }
 
-    @PostMapping(value = "deleteComment")
-    @ResponseBody
-    public boolean deleteComment(@RequestBody List<Comment> comments) {
-        logger.info(comments.toString());
-        for (Comment comment: comments)
-            courseWebMapper.deleteComment(comment);
-        return true;
-    }
+//    @PostMapping(value = "deleteComment")
+//    @ResponseBody
+//    public boolean deleteComment(@RequestBody List<Comment> comments) {
+//        logger.info(comments.toString());
+//        for (Comment comment: comments)
+//            courseWebMapper.deleteComment(comment);
+//        return true;
+//    }
 
     @PostMapping(value = "deleteNews")
     @ResponseBody
@@ -239,6 +248,22 @@ public class CourseWebController {
     public boolean deleteCourseInformation(@RequestBody List<String> title) {
         logger.info(title.toString());
         courseWebMapper.deleteCourseInformation(title.get(0));
+        return true;
+    }
+
+    @PostMapping(value = "deleteCommentByTitle")
+    @ResponseBody
+     public boolean deleteCommentByTitle(@RequestBody List<String> titles) {
+        logger.info(titles.toString());
+        courseWebMapper.deleteCommentByTitle(titles.get(0));
+        return true;
+    }
+
+    @PostMapping(value = "deleteComment")
+    @ResponseBody
+    public boolean deleteComment(@RequestBody Comment comment) {
+        logger.info(comment.toString());
+        courseWebMapper.deleteComment(comment);
         return true;
     }
 

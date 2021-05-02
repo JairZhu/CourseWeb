@@ -12,6 +12,18 @@ public class Comment {
     private Date time;
 
     @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", writer='" + writer + '\'' +
+                ", counterpart='" + counterpart + '\'' +
+                ", time=" + time +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Comment)) return false;

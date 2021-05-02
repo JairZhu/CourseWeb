@@ -31,7 +31,7 @@ public interface CourseWebMapper {
     @Select("select title, content, fileName, writer, time, score from homework")
     public List<Homework> findAllHomeworks();
 
-    @Select("select distinct title from comment order by time")
+    @Select("select title from comment order by time")
     public List<String> findAllCommentTitle();
 
     @Select("select id, title, content, writer, counterpart, time from comment where title = #{title} order by time")
@@ -64,9 +64,12 @@ public interface CourseWebMapper {
     @Insert("insert into homework values(#{title}, #{content}, #{fileName}, #{writer}, #{time}, #{score})")
     public void saveHomework(Homework homework);
 
-    @Delete("delete from comment where title = #{title} and content = #{content} and writer = #{writer} and" +
+    @Delete("delete from comment where title = #{title} and content = #{content} and writer = #{writer} and " +
             "counterpart = #{counterpart} and time = #{time}")
     public void deleteComment(Comment comment);
+
+    @Delete("delete from comment where title = #{title}")
+    public void deleteCommentByTitle(String title);
 
     @Delete("delete from news where title = #{title}")
     public void deleteNews(String title);

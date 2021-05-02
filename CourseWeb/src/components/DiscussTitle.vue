@@ -10,6 +10,7 @@
           <div v-for="i in $store.state.discussTitle" style="margin-bottom: 18px">
             <i class="el-icon-chat-round"></i>
             <el-button type="text" @click="showCommentByTitle(i)">{{i}}</el-button>
+            <el-button v-if="$store.state.isTeacher" type="text" style="float: right" @click="deleteByTitle(i)"><i class="el-icon-delete"></i></el-button>
           </div>
           <div style="text-align: center">
             <el-button type="primary" icon="el-icon-chat-square" @click="dialog.visible=true">新增主题</el-button>
@@ -62,6 +63,21 @@ export default {
     }
   },
   methods: {
+    deleteByTitle(title) {
+            this.$confirm('确认删除？')
+              .then(_ => {
+                  this.$http.post("http://localhost:8090/deleteCommentByTitle", [title]).then(result => {
+                      if (result.data) {
+                          this.$notify({
+                              type: "success",
+                              title: "删除成功！"
+                          });
+                          this.$store.commit('setDiscussTitle', this.$store.state.discussTitle.filter(function (v) { return title !== v}));
+                        }
+                    })
+                })
+              .catch(_ => {});
+    },
     showCommentByTitle(title) {
       this.$router.push({path: '/comment', query: { title: title}});
     },

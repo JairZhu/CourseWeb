@@ -30,7 +30,7 @@ public class UserInfoController {
     private final Logger logger = LoggerFactory.getLogger(CourseWebController.class);
 
     @Autowired
-    private RedisHandler courseWebMapper;
+    private CourseWebMapper courseWebMapper;
 
     @PostMapping(value = "updatePwd")
     @ResponseBody

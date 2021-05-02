@@ -164,9 +164,13 @@ public final class RedisHandler {
         List<String> objectList;
         Set<String> titleList = redisUtils.sGet("AllCommentTitle");
         if (titleList == null || titleList.size() == 0) {
-            objectList = courseWebMapper.findAllCommentTitle();
-            for (String comment: objectList) {
-                redisUtils.sSet("AllCommentTitle", comment);
+            List<String> src = courseWebMapper.findAllCommentTitle();
+            objectList = new ArrayList<>();
+            for (String s: src) {
+                if (!objectList.contains(s)) {
+                    objectList.add(s);
+                    redisUtils.sSet("AllCommentTitle", s);
+                }
             }
         }
         else {
@@ -260,6 +264,16 @@ public final class RedisHandler {
         if (redisUtils.lGetListSize(comment.getTitle()) == 0) {
             redisUtils.setRemove("AllCommentTitle", comment.getTitle());
         }
+    }
+
+    public void deleteCommentByTitle(String title) {
+        courseWebMapper.deleteCommentByTitle(title);
+        List<String> stringList = redisUtils.lGet(title, 0, -1);
+        for (String s: stringList) {
+            redisUtils.del(s);
+        }
+        redisUtils.del(title);
+        redisUtils.setRemove("AllCommentTitle", title);
     }
 
     public void deleteNews(String title) {

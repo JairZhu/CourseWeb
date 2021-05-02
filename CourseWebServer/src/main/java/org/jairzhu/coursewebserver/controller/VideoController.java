@@ -43,7 +43,7 @@ public class VideoController {
     private final NonStaticResourceHttpRequestHandler nonStaticResourceHttpRequestHandler;
 
     @Autowired
-    private RedisHandler courseWebMapper;
+    private CourseWebMapper courseWebMapper;
 
     public VideoController(NonStaticResourceHttpRequestHandler nonStaticResourceHttpRequestHandler) {
         this.nonStaticResourceHttpRequestHandler = nonStaticResourceHttpRequestHandler;
