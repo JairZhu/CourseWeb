@@ -20,17 +20,10 @@
 
         <div v-for="i in $store.state.videos" style="margin-bottom: 18px">
           <i class="el-icon-tickets"></i>
-              <el-link type="primary" @click="changeVideo(i.title)">{{i.title}}</el-link>
-          <el-link type="text" :href="'http://localhost:8090/downloadFile/Video/'+ i.title">下载</el-link>
+          <el-link type="primary" @click="changeVideo(i.title)">{{i.title}}</el-link>
+          <el-link type="primary" icon="el-icon-download" :href="'http://localhost:8090/downloadFile/Video/'+ i.title" style="float: right"></el-link>
         </div>
       </el-card>
-    </el-col>
-    <el-col :span="16" >
-        <el-card >
-          <video id="video" controls width="100%" height="100%">
-            <source id="playVideosss" :src=this.videoSrc type="video/mp4">
-          </video>
-        </el-card>
     </el-col>
   </el-row>
   <el-drawer :title="variousDrawers.title" :visible.sync="variousDrawers.visible" :direction="'ltr'">
