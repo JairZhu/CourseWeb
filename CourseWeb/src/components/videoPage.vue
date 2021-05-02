@@ -1,6 +1,13 @@
 <template>
   <div>
   <el-row :gutter="10"  justify="space-around" style="margin-top: 30px">
+    <el-col :span="16" >
+        <el-card >
+          <video id="video" controls width="100%" height="100%">
+            <source id="playVideosss" :src=this.videoSrc type="video/mp4">
+          </video>
+        </el-card>
+    </el-col>
     <el-col :span="8" >
       <el-card>
         <div slot="header">
