@@ -82,8 +82,9 @@ public class CourseWebController {
     @RequestMapping(value = "getCommentByTitle")
     @ResponseBody
     public List<Comment> findCommentByTitle(@RequestParam String title) throws JsonProcessingException {
-        logger.info(title);
-        return courseWebMapper.findAllCommentByTitle(title);
+        List<Comment> res = courseWebMapper.findAllCommentByTitle(title);
+        logger.info(res.toString());
+        return res;
     }
 
     @PostMapping(value = "postUser")
@@ -197,15 +198,6 @@ public class CourseWebController {
             return false;
         }
     }
-
-//    @PostMapping(value = "deleteComment")
-//    @ResponseBody
-//    public boolean deleteComment(@RequestBody List<Comment> comments) {
-//        logger.info(comments.toString());
-//        for (Comment comment: comments)
-//            courseWebMapper.deleteComment(comment);
-//        return true;
-//    }
 
     @PostMapping(value = "deleteNews")
     @ResponseBody

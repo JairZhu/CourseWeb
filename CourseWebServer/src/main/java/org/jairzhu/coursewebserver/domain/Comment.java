@@ -9,6 +9,7 @@ public class Comment {
     private String content;
     private String writer;
     private String counterpart;
+    private String reference;
     private Date time;
 
     @Override
@@ -19,6 +20,7 @@ public class Comment {
                 ", content='" + content + '\'' +
                 ", writer='" + writer + '\'' +
                 ", counterpart='" + counterpart + '\'' +
+                ", reference='" + reference + '\'' +
                 ", time=" + time +
                 '}';
     }
@@ -28,12 +30,12 @@ public class Comment {
         if (this == o) return true;
         if (!(o instanceof Comment)) return false;
         Comment comment = (Comment) o;
-        return id == comment.id && Objects.equals(title, comment.title) && Objects.equals(content, comment.content) && Objects.equals(writer, comment.writer) && Objects.equals(counterpart, comment.counterpart) && Objects.equals(time, comment.time);
+        return id == comment.id && Objects.equals(title, comment.title) && Objects.equals(content, comment.content) && Objects.equals(writer, comment.writer) && Objects.equals(counterpart, comment.counterpart) && Objects.equals(reference, comment.reference) && Objects.equals(time, comment.time);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, content, writer, counterpart, time);
+        return Objects.hash(id, title, content, writer, counterpart, reference, time);
     }
 
     public int getId() {
@@ -74,6 +76,14 @@ public class Comment {
 
     public void setCounterpart(String counterpart) {
         this.counterpart = counterpart;
+    }
+
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
     }
 
     public Date getTime() {
