@@ -221,7 +221,7 @@ export default {
   name: "MainPage",
   data() {
     return {
-      imgUrl: 'http://localhost:8090/headPhoto/'+this.$store.state.user.name+'.jpg',
+      imgUrl: 'http://localhost:8090/photoPlay?userName='+this.$store.state.user.name+'.jpg',
       checkList: [],
       popoverVisible: false,
       homeworkDrawer: {

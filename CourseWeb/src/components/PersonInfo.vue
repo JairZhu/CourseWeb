@@ -4,14 +4,15 @@
       <el-card class="box-card" align="middle">
         <div slot="header" class="clearfix" >
           <h2>用户中心</h2>
-          <div class="demo-image" align="left">
+          <div class="demo-image" align="center">
 
             <el-image class="headPhoto"
                       style="width: 100px; height: 100px; "
-                      :src="imgUrl"
+                      :src=this.photoSrc
                       align="left"
 
             ></el-image>
+
             <el-upload
               class="upload-demo"
               drag
@@ -25,16 +26,22 @@
             </el-upload>
 
           </div>
+
+
           <el-button style="float: right; padding: 3px 0" type="text" @click="updatePwd('ruleForm')" circle>修改密码</el-button>
         </div>
 
 
         <el-form :model="ruleForm" ref="ruleForm" label-width="70px" class="demo-ruleForm">
           <el-form-item label="用户名" prop="name">
-            <span>{{ruleForm.name}}</span>
+            <el-input v-model="ruleForm.name" disabled></el-input>
           </el-form-item>
-          <el-form-item v-if="$store.state.isTeacher" label="职位">教师</el-form-item>
-          <el-form-item v-else label="职位">学生</el-form-item>
+          <el-form-item v-if="$store.state.isTeacher" label="职位">
+            <el-input placeholder="教师" disabled></el-input>
+          </el-form-item>
+          <el-form-item v-else label="职位">
+            <el-input placeholder="学生" disabled></el-input>
+          </el-form-item>
           <el-form-item label="密码">
             <el-input v-model="ruleForm.password" type="password"></el-input>
           </el-form-item>
@@ -52,13 +59,13 @@ export default {
   name: "PersonInfo",
   data() {
     return {
+      photoSrc:'http://localhost:8090/photoPlay?userName='+this.$store.state.user.name+'.jpg',
       ruleForm: {
         name: this.$store.state.user.name,
         password: this.$store.state.user.password,
         type: this.$store.state.user.type
       },
-      imgUrl: 'http://localhost:8090/headPhoto/'+this.$store.state.user.name+'.jpg',
-      uploadPath:'http://localhost:8090/uploadHeadPhoto/'+this.$store.state.user.name
+      uploadPath:'http://localhost:8090/uploadHeadPhoto/'+this.$store.state.user.name+'.jpg'
     };
   },
   methods:{
@@ -88,6 +95,7 @@ export default {
   }
 }
 
+
 </script>
 
 <style scoped>
@@ -114,4 +122,5 @@ export default {
 .headPhoto{
   border-radius: 30px;
 }
+
 </style>
