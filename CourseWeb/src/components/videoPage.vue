@@ -4,7 +4,7 @@
     <el-col :span="16" >
         <el-card >
           <video id="video" controls width="100%" height="100%">
-            <source id="playVideosss" :src=this.videoSrc type="video/mp4">
+            <source id="playVideos" :src=this.videoSrc type="video/mp4">
           </video>
         </el-card>
     </el-col>
@@ -20,8 +20,10 @@
 
         <div v-for="i in $store.state.videos" style="margin-bottom: 18px">
           <i class="el-icon-tickets"></i>
+
           <el-link type="primary" @click="changeVideo(i.title)">{{i.title}}</el-link>
           <el-button type="primary" icon="el-icon-download":href="'http://47.101.58.148:8090/downloadFile/Video/'+ i.title"></el-button>
+
         </div>
       </el-card>
     </el-col>

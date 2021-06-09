@@ -221,7 +221,11 @@ export default {
   name: "MainPage",
   data() {
     return {
+<<<<<<< HEAD
+      imgUrl: 'http://47.101.58.148:8090/headPhoto/'+this.$store.state.user.name+'.jpg',
+=======
       imgUrl: 'http://47.101.58.148:8090/photoPlay?userName='+this.$store.state.user.name+'.jpg',
+>>>>>>> 5cea3e55eabfe5a83ddda927b02f31887e850fb3
       checkList: [],
       popoverVisible: false,
       homeworkDrawer: {

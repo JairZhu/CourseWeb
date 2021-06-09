@@ -31,7 +31,11 @@ public interface CourseWebMapper {
     @Select("select title, content, fileName, writer, time, score from homework")
     public List<Homework> findAllHomeworks();
 
+<<<<<<< HEAD
+    @Select("select distinct title from comment")
+=======
     @Select("select title from comment order by time")
+>>>>>>> 5cea3e55eabfe5a83ddda927b02f31887e850fb3
     public List<String> findAllCommentTitle();
 
     @Select("select id, title, content, writer, counterpart, reference, time from comment where title = #{title} order by time")

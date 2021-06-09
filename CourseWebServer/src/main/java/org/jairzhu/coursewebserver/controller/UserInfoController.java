@@ -1,6 +1,6 @@
 package org.jairzhu.coursewebserver.controller;
 
-
+import org.jairzhu.coursewebserver.domain.Comment;
 import org.jairzhu.coursewebserver.domain.NonStaticResourceHttpRequestHandler;
 import org.jairzhu.coursewebserver.domain.User;
 import org.jairzhu.coursewebserver.mapper.CourseWebMapper;
@@ -25,14 +25,17 @@ import java.nio.file.Paths;
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @EnableAutoConfiguration
+
 public class UserInfoController {
     private final Logger logger = LoggerFactory.getLogger(CourseWebController.class);
+    @Autowired
     private final NonStaticResourceHttpRequestHandler nonStaticResourceHttpRequestHandler;
 
     public UserInfoController(NonStaticResourceHttpRequestHandler nonStaticResourceHttpRequestHandler, CourseWebMapper courseWebMapper) {
         this.nonStaticResourceHttpRequestHandler = nonStaticResourceHttpRequestHandler;
         this.courseWebMapper = courseWebMapper;
     }
+
 
     @Autowired
     private CourseWebMapper courseWebMapper;
@@ -91,6 +94,7 @@ public class UserInfoController {
     public void videoPreview(@RequestParam(name = "userName") String userName, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         String path = ResourceUtils.getURL("src/main/resources/static/headPhoto").getPath().substring(1);
+
         //windows下目录
         //String realPath = path + userName;
         //linux下目录
