@@ -91,7 +91,10 @@ public class UserInfoController {
     public void videoPreview(@RequestParam(name = "userName") String userName, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         String path = ResourceUtils.getURL("src/main/resources/static/headPhoto").getPath().substring(1);
-        String realPath = path + userName;
+        //windows下目录
+        //String realPath = path + userName;
+        //linux下目录
+        String realPath = "/" + path + userName;
 
         Path filePath = Paths.get(realPath);
 
