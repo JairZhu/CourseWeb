@@ -14,7 +14,7 @@
           <i class="el-icon-document-copy"></i>
           <span style="margin-left: 5px">视频浏览</span>
           <span v-if="$store.state.isTeacher" style="float: right">
-              <el-button type="primary" icon="el-icon-edit" @click="editInfo('编辑视频', $store.state.videos)"></el-button>
+              <el-button type="text" icon="el-icon-edit" @click="editInfo('编辑视频', $store.state.videos)"></el-button>
             </span>
         </div>
 
@@ -22,8 +22,7 @@
           <i class="el-icon-tickets"></i>
 
           <el-link type="primary" @click="changeVideo(i.title)">{{i.title}}</el-link>
-          <el-button type="primary" icon="el-icon-download":href="'http://47.101.58.148:8090/downloadFile/Video/'+ i.title"></el-button>
-
+          <el-link type="primary" icon="el-icon-download" :href="'http://47.101.58.148:8090/downloadFile/video/'+ i.title" style="float: right"></el-link>
         </div>
       </el-card>
     </el-col>

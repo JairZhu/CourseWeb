@@ -81,7 +81,6 @@ export default {
   },
   methods: {
     deleteComment(comment) {
-<<<<<<< HEAD
       this.$confirm('确认删除？')
         .then(_ => {
           this.$http.post("http://47.101.58.148:8090/deleteComment", comment).then(result => {
@@ -103,29 +102,6 @@ export default {
         })
         .catch(_ => {});
     },
-=======
-        this.$confirm('确认删除？')
-          .then(_ => {
-              this.$http.post("http://47.101.58.148:8090/deleteComment", comment).then(result => {
-                  if (result.data) {
-                      this.$notify({
-                          type: "success",
-                          title: "删除成功！"
-                      });
-                      this.$http.get("http://47.101.58.148:8090/getCommentByTitle", {params: {title: this.$route.query.title}}).then(res => {
-                          this.$store.commit('setComment', res);
-                          if (res.data.length === 0) {
-                              let str = this.$route.query.title;
-                              this.$store.commit('setDiscussTitle', this.$store.state.discussTitle.filter(function (v) { return str !== v}));
-                              this.$router.back();
-                            }
-                        });
-                    }
-                })
-            })
-          .catch(_ => {});
-     },
->>>>>>> 5cea3e55eabfe5a83ddda927b02f31887e850fb3
     showEdit() {
       this.show = true;
       this.tips = '请输入内容';

@@ -8,13 +8,13 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 @SpringBootTest
 class CoursewebserverApplicationTests {
 
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+//    @Autowired
+//    private StringRedisTemplate stringRedisTemplate;
 
-    @Test
-    void contextLoads() {
-        stringRedisTemplate.opsForValue().set("key", "test");
-        System.out.println(stringRedisTemplate.opsForValue().get("key"));
-    }
+//    @Test
+//    void contextLoads() {
+//        stringRedisTemplate.opsForValue().set("key", "test");
+//        System.out.println(stringRedisTemplate.opsForValue().get("key"));
+//    }
 
 }

@@ -101,8 +101,9 @@ public class UserInfoController {
         String realPath = "/" + path + userName;
 
         Path filePath = Paths.get(realPath);
-
+        logger.info(realPath);
         if (Files.exists(filePath)) {
+            logger.info("if jinru");
             String contentType = Files.probeContentType(filePath);
             if (!StringUtils.isEmpty(contentType)) {
                 response.setContentType(contentType);

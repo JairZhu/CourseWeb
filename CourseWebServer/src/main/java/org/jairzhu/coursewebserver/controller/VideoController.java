@@ -129,23 +129,30 @@ public class VideoController {
         //假如视频1.mp4放在了static下的video文件夹里头，sourcePath是获取resources文件夹的绝对地址
         //realPath是视频所在的绝对地址
         logger.info("videoPlay:"+fileName);
-        String path=System.getProperty("user.dir") + "/src/main/resources/static/video";
+        String path = ResourceUtils.getURL("src/main/resources/static/video").getPath().substring(1);
+
 //        String path = ResourceUtils.getURL("src/main/resources/static/video").getPath().substring(1);
         logger.info("video:src"+path);
-        String realPath = "/" + path + fileName;
+        String realPath = "/" + path +  fileName;
 
         Path filePath = Paths.get(realPath);
-
+        logger.info(realPath);
         if (Files.exists(filePath)) {
+            logger.info("if jinru");
             String contentType = Files.probeContentType(filePath);
             if (!StringUtils.isEmpty(contentType)) {
                 response.setContentType(contentType);
             }
             request.setAttribute(NonStaticResourceHttpRequestHandler.ATTR_FILE, filePath);
+            logger.info("zhuanfa qian");
+
             nonStaticResourceHttpRequestHandler.handleRequest(request, response);
+            logger.info("zhuanfa hou");
         } else {
+            logger.info("else jinru");
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             response.setCharacterEncoding(StandardCharsets.UTF_8.toString());
         }
+        logger.info("jieshu");
     }
 }
