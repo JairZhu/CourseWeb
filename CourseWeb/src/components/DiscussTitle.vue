@@ -82,7 +82,7 @@ export default {
         this.dialog.form.time = new Date();
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.$http.post("http://localhost:8090/saveComment", this.dialog.form).then(result => {
+            this.$http.post("http://47.101.58.148:8090/saveComment", this.dialog.form).then(result => {
               if (result.data) {
                 this.$store.commit('addDiscussTitle', JSON.parse(JSON.stringify(this.dialog.form.title)));
                 this.$message({
@@ -102,7 +102,7 @@ export default {
     deleteByTitle(title) {
       this.$confirm('确认删除？')
         .then(_ => {
-          this.$http.post("http://localhost:8090/deleteCommentByTitle", [title]).then(result => {
+          this.$http.post("http://47.101.58.148:8090/deleteCommentByTitle", [title]).then(result => {
             if (result.data) {
               this.$notify({
                 type: "success",

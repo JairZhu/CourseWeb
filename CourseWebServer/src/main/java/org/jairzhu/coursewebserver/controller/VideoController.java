@@ -99,23 +99,23 @@ public class VideoController {
 
     /***
      * 批量上传视频功能，待完善
-     * @param files
+     * @param
      * @return
      */
-    @PostMapping(value = "uploadVideos")
-    @ResponseBody
-    public boolean uploadVideos(@RequestParam("file") MultipartFile[] files) {
-        for (MultipartFile oneFile : files) {
-            String filename = oneFile.getOriginalFilename();
-            try {
-                oneFile.transferTo(new File(System.getProperty("user.dir") + "/src/main/resources/static/video", filename));
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            }
-        }
-        return true;
-    }
+//    @PostMapping(value = "uploadVideos")
+//    @ResponseBody
+//    public boolean uploadVideos(@RequestParam("file") MultipartFile[] files) {
+//        for (MultipartFile oneFile : files) {
+//            String filename = oneFile.getOriginalFilename();
+//            try {
+//                oneFile.transferTo(new File(System.getProperty("user.dir") + "/src/main/resources/static/video", filename));
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
 
 
 
@@ -127,7 +127,8 @@ public class VideoController {
         //假如视频1.mp4放在了static下的video文件夹里头，sourcePath是获取resources文件夹的绝对地址
         //realPath是视频所在的绝对地址
         logger.info("videoPlay:"+fileName);
-        String path = ResourceUtils.getURL("src/main/resources/static/video").getPath().substring(1);
+        String path=System.getProperty("user.dir") + "/src/main/resources/static/video";
+//        String path = ResourceUtils.getURL("src/main/resources/static/video").getPath().substring(1);
         logger.info("video:src"+path);
         String realPath = path + fileName;
 

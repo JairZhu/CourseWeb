@@ -11,6 +11,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -285,12 +286,13 @@ public class CourseWebController {
 
     @PostMapping(value = "uploadFile/{type}")
     @ResponseBody
-    public boolean uploadFile(@PathVariable(name="type")String type,@RequestParam("file") MultipartFile file) {
+    public boolean uploadFile(@PathVariable(name="type")String type,@RequestParam("file") MultipartFile file) throws FileNotFoundException {
         String filename = file.getOriginalFilename();
         logger.info("uploadFile"+System.getProperty("user.dir")+filename);
+        String targetPath = ResourceUtils.getURL("classpath:").getPath()+"static/"+type;
         try {
             file.transferTo(new File(System.getProperty("user.dir") + "/src/main/resources/static/"+type, filename));
-
+            file.transferTo(new File(targetPath,filename));
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -302,8 +304,9 @@ public class CourseWebController {
     @ResponseBody
     public ResponseEntity<Object> downloadFile(@PathVariable(name = "fileName") String fileName, @PathVariable(name = "type") String type) throws FileNotFoundException {
         logger.info("download type: " + type + "  file: " + fileName);
-        String path = "src/main/resources/static/" + type;
-        File file = new File(path, fileName);
+//        String path = "src/main/resources/static/" + type;
+        String targetPath = ResourceUtils.getURL("classpath:").getPath()+"static/";
+        File file = new File(targetPath, fileName);
         InputStreamResource resource = new InputStreamResource ( new FileInputStream( file ) );
 
         byte[] fileNameBytes = fileName.getBytes(StandardCharsets.UTF_8);

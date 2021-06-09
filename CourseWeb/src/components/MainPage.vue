@@ -70,7 +70,7 @@
               </el-form-item>
               <el-form-item label="文件">
                 <el-upload
-                  action="http://localhost:8090/uploadFile/homework"
+                  action="http://47.101.58.148:8090/uploadFile/homework"
                   accept=".pdf"
                   :before-upload="handleHomeworkUpload"
                   :before-remove="handleHomeworkRemove"
@@ -143,7 +143,7 @@
           </div>
           <div v-for="i in $store.state.ppts" style="margin-bottom: 18px">
             <i class="el-icon-tickets"></i>
-            <el-link type="primary" :href="'http://localhost:8090/downloadFile/ppt/'+ i.title">{{i.title}}</el-link>
+            <el-link type="primary" :href="'http://47.101.58.148:8090/downloadFile/ppt/'+ i.title">{{i.title}}</el-link>
           </div>
         </el-card>
       </el-col>
@@ -182,7 +182,7 @@
         <span>作者：{{homeworkDrawer.writer}}</span> <br><br>
         <!--        <p style="text-indent: 20px">{{homeworkDrawer.time}}</p>-->
         <span style="line-height: 150%; white-space: pre-wrap">内容：{{homeworkDrawer.content}}</span><br><br>
-        文件：<el-link type="primary" :href="'http://localhost:8090/downloadFile/homework/'+ homeworkDrawer.fileName">{{homeworkDrawer.fileName}}</el-link><br><br>
+        文件：<el-link type="primary" :href="'http://47.101.58.148:8090/downloadFile/homework/'+ homeworkDrawer.fileName">{{homeworkDrawer.fileName}}</el-link><br><br>
         分数：<el-input v-model="homeworkDrawer.score" placeholder="请输入分数" style="width: 120px" oninput="value=value.replace(/[^\d]/g,'')" clearable></el-input><br><br>
         <div style="text-align: center">
           <el-button type="primary" @click="updateScore(homeworkDrawer)" round>确认</el-button>
@@ -198,7 +198,7 @@
           <el-date-picker v-model="dialog.form.time" type="datetime" placeholder="请选择日期时间"></el-date-picker>
         </el-form-item>
         <el-form-item label="文件" v-if="dialog.isPPT">
-          <el-upload action="http://localhost:8090/uploadFile/ppt" :limit="1" :before-upload="handlePPTUpload">
+          <el-upload action="http://47.101.58.148:8090/uploadFile/ppt" :limit="1" :before-upload="handlePPTUpload">
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传单个文件，且不超过20MB</div>
           </el-upload>
@@ -221,7 +221,7 @@ export default {
   name: "MainPage",
   data() {
     return {
-      imgUrl: 'http://localhost:8090/headPhoto/'+this.$store.state.user.name+'.jpg',
+      imgUrl: 'http://47.101.58.148:8090/headPhoto/'+this.$store.state.user.name+'.jpg',
       checkList: [],
       popoverVisible: false,
       homeworkDrawer: {
