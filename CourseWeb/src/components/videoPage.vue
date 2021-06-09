@@ -14,7 +14,7 @@
         <div v-for="i in $store.state.videos" style="margin-bottom: 18px">
           <i class="el-icon-tickets"></i>
               <el-link type="primary" @click="changeVideo(i.title)">{{i.title}}</el-link>
-          <el-link type="text" :href="'http://localhost:8090/downloadFile/Video/'+ i.title">下载</el-link>
+          <el-link type="text" :href="'http://47.101.58.148:8090/downloadFile/Video/'+ i.title">下载</el-link>
         </div>
       </el-card>
     </el-col>
@@ -58,7 +58,7 @@
           <el-date-picker v-model="dialog.form.time" type="datetime" placeholder="请选择日期时间"></el-date-picker>
         </el-form-item>
         <el-form-item label="文件" v-if="dialog.isVideo">
-          <el-upload action="http://localhost:8090/uploadFile/video" :limit="10" :before-upload="handleVideoUpload">
+          <el-upload action="http://47.101.58.148:8090/uploadFile/video" :limit="10" :before-upload="handleVideoUpload">
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传最多单个个文件，且不超过2GB</div>
           </el-upload>
@@ -121,7 +121,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (dialog.title === "编辑视频") {
-            this.$http.post("http://localhost:8090/saveVideo", dialog.form).then(result => {
+            this.$http.post("http://47.101.58.148:8090/saveVideo", dialog.form).then(result => {
               this.updateAddInfo(result, {
                 type: 'addVideo',
                 // array: this.$store.state.videos,
@@ -133,7 +133,7 @@ export default {
       });
     },
     changeVideo(videoName){
-      this.videoSrc='http://localhost:8090/videoPlay?fileName='+videoName;
+      this.videoSrc='http://47.101.58.148:8090/videoPlay?fileName='+videoName;
       let vdo = document.getElementById("video")
       vdo.src=this.videoSrc;
       vdo.play();
@@ -143,7 +143,7 @@ export default {
     deleteInfo(type, checkList) {
       if (type === '编辑视频') {
         console.log(checkList)
-        this.$http.post('http://localhost:8090/deleteFile/',checkList).then(result => {
+        this.$http.post('http://47.101.58.148:8090/deleteFile/',checkList).then(result => {
           this.updateDeleteInfo(result, {
             type: 'setVideos',
             array: this.$store.state.videos,

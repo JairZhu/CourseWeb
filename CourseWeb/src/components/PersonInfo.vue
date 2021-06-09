@@ -59,13 +59,13 @@ export default {
   name: "PersonInfo",
   data() {
     return {
-      photoSrc:'http://localhost:8090/photoPlay?userName='+this.$store.state.user.name+'.jpg',
+      photoSrc:'http://47.101.58.148:8090/photoPlay?userName='+this.$store.state.user.name+'.jpg',
       ruleForm: {
         name: this.$store.state.user.name,
         password: this.$store.state.user.password,
         type: this.$store.state.user.type
       },
-      uploadPath:'http://localhost:8090/uploadHeadPhoto/'+this.$store.state.user.name+'.jpg'
+      uploadPath:'http://47.101.58.148:8090/uploadHeadPhoto/'+this.$store.state.user.name+'.jpg'
     };
   },
   methods:{
@@ -73,7 +73,7 @@ export default {
       this.$store.commit('setUser', this.ruleForm);
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$http.post("http://localhost:8090/updatePwd", this.ruleForm).then(result => {
+          this.$http.post("http://47.101.58.148:8090/updatePwd", this.ruleForm).then(result => {
             if (result.data) {
               this.userLogin();
               this.$notify({

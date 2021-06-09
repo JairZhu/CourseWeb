@@ -70,9 +70,9 @@ export default {
       // console.log("editCourseInformation: ", this.dialog.form)
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$http.post("http://localhost:8090/deleteCourseInformation", [this.dialog.form.title]).then(result => {
+          this.$http.post("http://47.101.58.148:8090/deleteCourseInformation", [this.dialog.form.title]).then(result => {
             if (result.data) {
-              this.$http.post("http://localhost:8090/saveCourseInformation", this.dialog.form).then(res => {
+              this.$http.post("http://47.101.58.148:8090/saveCourseInformation", this.dialog.form).then(res => {
                 if (res.data) {
                   this.$store.commit('setCourseInformation', JSON.parse(JSON.stringify(this.dialog.form)));
                   this.$notify({

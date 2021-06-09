@@ -83,13 +83,13 @@ export default {
     deleteComment(comment) {
         this.$confirm('确认删除？')
           .then(_ => {
-              this.$http.post("http://localhost:8090/deleteComment", comment).then(result => {
+              this.$http.post("http://47.101.58.148:8090/deleteComment", comment).then(result => {
                   if (result.data) {
                       this.$notify({
                           type: "success",
                           title: "删除成功！"
                       });
-                      this.$http.get("http://localhost:8090/getCommentByTitle", {params: {title: this.$route.query.title}}).then(res => {
+                      this.$http.get("http://47.101.58.148:8090/getCommentByTitle", {params: {title: this.$route.query.title}}).then(res => {
                           this.$store.commit('setComment', res);
                           if (res.data.length === 0) {
                               let str = this.$route.query.title;
@@ -125,7 +125,7 @@ export default {
         this.form.time = new Date();
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.$http.post("http://localhost:8090/saveComment", this.form).then(result => {
+            this.$http.post("http://47.101.58.148:8090/saveComment", this.form).then(result => {
               if (result.data) {
                 this.$store.commit("addComment", JSON.parse(JSON.stringify(this.form)));
                 this.$message({
@@ -143,7 +143,7 @@ export default {
     }
   },
   created() {
-    this.$http.get("http://localhost:8090/getCommentByTitle", {params: {title: this.$route.query.title}}).then(res => {
+    this.$http.get("http://47.101.58.148:8090/getCommentByTitle", {params: {title: this.$route.query.title}}).then(res => {
       this.$store.commit('setComment', res);
       console.log(res.data);
     });
