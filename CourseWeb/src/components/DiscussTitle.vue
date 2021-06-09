@@ -63,6 +63,21 @@ export default {
     }
   },
   methods: {
+    deleteByTitle(title) {
+            this.$confirm('确认删除？')
+              .then(_ => {
+                  this.$http.post("http://47.101.58.148:8090/deleteCommentByTitle", [title]).then(result => {
+                      if (result.data) {
+                          this.$notify({
+                              type: "success",
+                              title: "删除成功！"
+                          });
+                          this.$store.commit('setDiscussTitle', this.$store.state.discussTitle.filter(function (v) { return title !== v}));
+                        }
+                    })
+                })
+              .catch(_ => {});
+    },
     showCommentByTitle(title) {
       this.$router.push({path: '/comment', query: { title: title}});
     },
@@ -98,6 +113,7 @@ export default {
         this.$message.error("请先登录！");
         this.$router.push('/mainPage');
       }
+<<<<<<< HEAD
     },
     deleteByTitle(title) {
       this.$confirm('确认删除？')
@@ -113,6 +129,8 @@ export default {
           })
         })
         .catch(_ => {});
+=======
+>>>>>>> 5cea3e55eabfe5a83ddda927b02f31887e850fb3
     }
   },
 }

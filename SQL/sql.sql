@@ -79,6 +79,7 @@ create table `comment` (
     `content` varchar(1000) not null,
     `writer` varchar(50) not null ,
     `counterpart` varchar(50) not null,
+    `reference` varchar(1000) not null,
     `time` timestamp not null ,
     primary key (id),
     foreign key (writer) references user(name) on delete cascade on update cascade
@@ -95,13 +96,13 @@ insert into user values ('沈茜', '1', true);
 insert into user values ('丁箐', '1', true);
 insert into user values ('zkl', '1', true);
 
-insert into comment values (0, '架构风格和架构模式的区别是什么？', '架构风格和架构模式的区别是什么？', 'SUMi_粟米', '', now());
+insert into comment(title, content, writer, counterpart, reference, time) values ( '架构风格和架构模式的区别是什么？', '架构风格和架构模式的区别是什么？', 'SUMi_粟米', '', '', now());
 
-insert into comment(title, content, writer, counterpart, time) values ('如何在写项目时运用学到的设计模式？', '如何在写项目时运用学到的设计模式？', '熊猫丢了猫', '', now());
+insert into comment(title, content, writer, counterpart, reference, time) values ('如何在写项目时运用学到的设计模式？', '如何在写项目时运用学到的设计模式？', '熊猫丢了猫', '', '', now());
 
-insert into comment(title, content, writer, counterpart, time) values ('GKD学生前来报道', 'GKD学生前来报道', '井中月lya', '', now());
+insert into comment(title, content, writer, counterpart, reference, time) values ('GKD学生前来报道', 'GKD学生前来报道', '井中月lya', '', '', now());
 
-insert into comment(title, content, writer, counterpart, time) values ('GKD学生前来报道', '奥力给', '僵尸狗', '井中月lya', now());
+insert into comment(title, content, writer, counterpart, reference, time) values ('GKD学生前来报道', '奥力给', '僵尸狗', '井中月lya', 'GKD学生前来报道', now());
 
 insert into courseInformation values ('教学大纲', '课程编号：EIEN6008P
 

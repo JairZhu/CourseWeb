@@ -31,13 +31,17 @@ public interface CourseWebMapper {
     @Select("select title, content, fileName, writer, time, score from homework")
     public List<Homework> findAllHomeworks();
 
+<<<<<<< HEAD
     @Select("select distinct title from comment")
+=======
+    @Select("select title from comment order by time")
+>>>>>>> 5cea3e55eabfe5a83ddda927b02f31887e850fb3
     public List<String> findAllCommentTitle();
 
-    @Select("select title, content, writer, counterpart, time from comment where title = #{title} order by time")
+    @Select("select id, title, content, writer, counterpart, reference, time from comment where title = #{title} order by time")
     public List<Comment> findAllCommentByTitle(String title);
 
-    @Insert("insert into comment(title, content, writer, counterpart, time) values(#{title}, #{content}, #{writer}, #{counterpart}, #{time})")
+    @Insert("insert into comment(title, content, writer, counterpart, reference, time) values(#{title}, #{content}, #{writer}, #{counterpart}, #{reference}, #{time})")
     public void saveComment(Comment comment);
 
     @Insert("insert into user(name, password, type) values(#{name}, #{password}, #{type})")
@@ -65,7 +69,7 @@ public interface CourseWebMapper {
     public void saveHomework(Homework homework);
 
     @Delete("delete from comment where title = #{title} and content = #{content} and writer = #{writer} and " +
-            "counterpart = #{counterpart} and time = #{time}")
+            "counterpart = #{counterpart} and time = #{time} and reference = #{reference}")
     public void deleteComment(Comment comment);
 
     @Delete("delete from comment where title = #{title}")

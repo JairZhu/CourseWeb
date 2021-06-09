@@ -1,13 +1,16 @@
 package org.jairzhu.coursewebserver.controller;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.jairzhu.coursewebserver.domain.NonStaticResourceHttpRequestHandler;
 import org.jairzhu.coursewebserver.domain.Video;
 import org.jairzhu.coursewebserver.mapper.CourseWebMapper;
+import org.jairzhu.coursewebserver.redisUtils.RedisHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -42,9 +45,8 @@ public class VideoController {
     @Autowired
     private CourseWebMapper courseWebMapper;
 
-    public VideoController(NonStaticResourceHttpRequestHandler nonStaticResourceHttpRequestHandler, CourseWebMapper courseWebMapper) {
+    public VideoController(NonStaticResourceHttpRequestHandler nonStaticResourceHttpRequestHandler) {
         this.nonStaticResourceHttpRequestHandler = nonStaticResourceHttpRequestHandler;
-        this.courseWebMapper = courseWebMapper;
     }
 
     @PostMapping(value = "deleteVideo")
@@ -58,7 +60,7 @@ public class VideoController {
 
     @RequestMapping(value = "getVideos")
     @ResponseBody
-    public List<Video> findAllvideos() { return courseWebMapper.findAllVideos(); }
+    public List<Video> findAllvideos() throws JsonProcessingException { return courseWebMapper.findAllVideos(); }
 
     @RequestMapping(value="saveVideo")
     @ResponseBody

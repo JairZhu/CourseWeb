@@ -14,11 +14,20 @@
                   <span style="color: #409EFF">{{i.writer}}：</span>
                 </div>
                 <div style="margin-left: 20px; margin-top: 10px">
-                  <span v-if="i.counterpart !== ''" style="color: #409EFF;margin-right: 3px">@{{i.counterpart}}</span>
+                  <el-card v-if="i.counterpart !== ''" style="margin-top: 4px; margin-bottom: 4px">
+                    <div>
+                      <div>
+                        <span style="color: #409EFF">@{{i.counterpart}}：</span><br>
+                      </div>
+                      <div style="margin-top: 5px">
+                        <span style="margin-left: 10px;">{{i.reference}}</span>
+                      </div>
+                    </div>
+                  </el-card>
                   <span>{{i.content}}</span>
                 </div>
                 <div style="text-align: right">
-                  <el-button type="text" icon="el-icon-chat-square" @click="showResponse(i.writer)" circle></el-button>
+                  <el-button type="text" icon="el-icon-chat-square" @click="showResponse(i)" circle></el-button>
                   <el-button v-if="$store.state.isTeacher" type="text" icon="el-icon-delete" @click="deleteComment(i)" circle></el-button>
                 </div>
               </el-card>
@@ -60,6 +69,7 @@ export default {
         content: '',
         writer: '',
         counterpart: '',
+        reference: '',
         time: ''
       },
       rules: {
@@ -71,6 +81,7 @@ export default {
   },
   methods: {
     deleteComment(comment) {
+<<<<<<< HEAD
       this.$confirm('确认删除？')
         .then(_ => {
           this.$http.post("http://47.101.58.148:8090/deleteComment", comment).then(result => {
@@ -92,16 +103,41 @@ export default {
         })
         .catch(_ => {});
     },
+=======
+        this.$confirm('确认删除？')
+          .then(_ => {
+              this.$http.post("http://47.101.58.148:8090/deleteComment", comment).then(result => {
+                  if (result.data) {
+                      this.$notify({
+                          type: "success",
+                          title: "删除成功！"
+                      });
+                      this.$http.get("http://47.101.58.148:8090/getCommentByTitle", {params: {title: this.$route.query.title}}).then(res => {
+                          this.$store.commit('setComment', res);
+                          if (res.data.length === 0) {
+                              let str = this.$route.query.title;
+                              this.$store.commit('setDiscussTitle', this.$store.state.discussTitle.filter(function (v) { return str !== v}));
+                              this.$router.back();
+                            }
+                        });
+                    }
+                })
+            })
+          .catch(_ => {});
+     },
+>>>>>>> 5cea3e55eabfe5a83ddda927b02f31887e850fb3
     showEdit() {
       this.show = true;
       this.tips = '请输入内容';
       this.form.counterpart = '';
+      this.form.reference = '';
       this.form.content = '';
     },
-    showResponse(counterpart) {
+    showResponse(form) {
       this.show = true;
-      this.tips = '回复：@' + counterpart;
-      this.form.counterpart = counterpart;
+      this.tips = '回复：@' + form.writer;
+      this.form.counterpart = form.writer;
+      this.form.reference = form.content;
       this.form.content = '';
     },
     resetForm(formName) {
@@ -128,11 +164,12 @@ export default {
         this.$message.error("请先登录！");
         this.$router.push('/mainPage');
       }
-    },
+    }
   },
   created() {
     this.$http.get("http://47.101.58.148:8090/getCommentByTitle", {params: {title: this.$route.query.title}}).then(res => {
       this.$store.commit('setComment', res);
+      console.log(res.data);
     });
   }
 }

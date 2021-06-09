@@ -204,7 +204,7 @@
           </el-upload>
         </el-form-item>
         <el-form-item label="内容" prop="content">
-          <el-input type="textarea" :rows="4" placeholder="请输入内容" v-model="dialog.form.content"></el-input>
+          <el-input type="textarea" :row="4" placeholder="请输入内容" v-model="dialog.form.content"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" style="text-align: right">
@@ -221,7 +221,11 @@ export default {
   name: "MainPage",
   data() {
     return {
+<<<<<<< HEAD
       imgUrl: 'http://47.101.58.148:8090/headPhoto/'+this.$store.state.user.name+'.jpg',
+=======
+      imgUrl: 'http://47.101.58.148:8090/photoPlay?userName='+this.$store.state.user.name+'.jpg',
+>>>>>>> 5cea3e55eabfe5a83ddda927b02f31887e850fb3
       checkList: [],
       popoverVisible: false,
       homeworkDrawer: {
@@ -373,28 +377,28 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (dialog.title === "编辑新闻") {
-            this.$http.post("http://localhost:8090/saveNews", dialog.form).then(result => {
+            this.$http.post("http://47.101.58.148:8090/saveNews", dialog.form).then(result => {
               this.updateAddInfo(result, {
                 type: 'addNews',
                 data: JSON.parse(JSON.stringify(dialog.form))
               })
             })
           } else if (dialog.title === "编辑通知") {
-            this.$http.post("http://localhost:8090/saveNotification", dialog.form).then(result => {
+            this.$http.post("http://47.101.58.148:8090/saveNotification", dialog.form).then(result => {
               this.updateAddInfo(result, {
                 type: 'addNotification',
                 data: JSON.parse(JSON.stringify(dialog.form))
               })
             })
           } else if (dialog.title === "编辑作业") {
-            this.$http.post("http://localhost:8090/saveAssignment", dialog.form).then(result => {
+            this.$http.post("http://47.101.58.148:8090/saveAssignment", dialog.form).then(result => {
               this.updateAddInfo(result, {
                 type: 'addAssignment',
                 data: JSON.parse(JSON.stringify(dialog.form))
               })
             })
           } else if (dialog.title === "编辑课件") {
-            this.$http.post("http://localhost:8090/savePPT", dialog.form).then(result => {
+            this.$http.post("http://47.101.58.148:8090/savePPT", dialog.form).then(result => {
               this.updateAddInfo(result, {
                 type: 'addPPT',
                 data: JSON.parse(JSON.stringify(dialog.form))
@@ -420,7 +424,7 @@ export default {
     },
     deleteInfo(type, checkList) {
       if (type === '编辑新闻') {
-        this.$http.post("http://localhost:8090/deleteNews", checkList).then(result => {
+        this.$http.post("http://47.101.58.148:8090/deleteNews", checkList).then(result => {
           this.updateDeleteInfo(result, {
             type: 'setNews',
             array: this.$store.state.news,
@@ -428,7 +432,7 @@ export default {
           })
         });
       } else if (type === '编辑通知') {
-        this.$http.post("http://localhost:8090/deleteNotification", checkList).then(result => {
+        this.$http.post("http://47.101.58.148:8090/deleteNotification", checkList).then(result => {
           this.updateDeleteInfo(result, {
             type: 'setNotifications',
             array: this.$store.state.notifications,
@@ -436,7 +440,7 @@ export default {
           })
         });
       } else if (type === '编辑作业') {
-        this.$http.post("http://localhost:8090/deleteAssignment", checkList).then(result => {
+        this.$http.post("http://47.101.58.148:8090/deleteAssignment", checkList).then(result => {
           this.updateDeleteInfo(result, {
             type: 'setAssignments',
             array: this.$store.state.assignments,
@@ -444,7 +448,7 @@ export default {
           });
         });
       } else if (type === '编辑课件') {
-        this.$http.post("http://localhost:8090/deletePPT", checkList).then(result => {
+        this.$http.post("http://47.101.58.148:8090/deletePPT", checkList).then(result => {
           this.updateDeleteInfo(result, {
             type: 'setPPTs',
             array: this.$store.state.ppts,
@@ -457,7 +461,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           // console.log("submitForm: ", this.ruleForm);
-          this.$http.post("http://localhost:8090/postUser", this.ruleForm).then(result => {
+          this.$http.post("http://47.101.58.148:8090/postUser", this.ruleForm).then(result => {
             if (result.data) {
               this.userLogin();
               this.$notify({
@@ -482,7 +486,7 @@ export default {
     loginForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$http.post("http://localhost:8090/saveUser", this.ruleForm).then(result => {
+          this.$http.post("http://47.101.58.148:8090/saveUser", this.ruleForm).then(result => {
             if (result.data) {
               this.userLogin();
               this.$notify({
@@ -507,7 +511,7 @@ export default {
           this.homeworkForm.writer = this.$store.state.user.name;
           if (valid) {
             // console.log("homeworkForm:", this.homeworkForm);
-            this.$http.post("http://localhost:8090/saveHomework", this.homeworkForm).then(result => {
+            this.$http.post("http://47.101.58.148:8090/saveHomework", this.homeworkForm).then(result => {
               if (result.data) {
                 this.$store.commit('addHomework', JSON.parse(JSON.stringify(this.homeworkForm)));
                 this.$notify({
@@ -542,7 +546,7 @@ export default {
     },
     updateScore(item) {
       // console.log("updateScore:", item);
-      this.$http.post("http://localhost:8090/updateScore", item).then(result => {
+      this.$http.post("http://47.101.58.148:8090/updateScore", item).then(result => {
         if (result.data) {
           this.$store.commit('updateScore', item);
           this.$message({

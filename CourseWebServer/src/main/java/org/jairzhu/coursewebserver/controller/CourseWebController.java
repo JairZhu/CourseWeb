@@ -1,7 +1,9 @@
 package org.jairzhu.coursewebserver.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.jairzhu.coursewebserver.domain.*;
 import org.jairzhu.coursewebserver.mapper.CourseWebMapper;
+import org.jairzhu.coursewebserver.redisUtils.RedisHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,50 +37,60 @@ public class CourseWebController {
 
     @RequestMapping(value = "getNews")
     @ResponseBody
-    public List<News> findAllNews() {
+    public List<News> findAllNews() throws JsonProcessingException {
         return courseWebMapper.findAllNews();
     }
 
     @RequestMapping(value = "getNotifications")
     @ResponseBody
-    public List<Notification> findAllNotifications() {
+    public List<Notification> findAllNotifications() throws JsonProcessingException {
         return courseWebMapper.findAllNotifications();
     }
 
     @RequestMapping(value = "getPPTs")
     @ResponseBody
-    public List<PPT> findAllPPTs() {
+    public List<PPT> findAllPPTs() throws JsonProcessingException {
         return courseWebMapper.findAllPPTs();
     }
 
     @RequestMapping(value = "getAssignments")
     @ResponseBody
-    public List<Assignment> findAllAssignment() {
+    public List<Assignment> findAllAssignment() throws JsonProcessingException {
         return courseWebMapper.findAllAssignment();
     }
 
     @RequestMapping(value = "getHomeworks")
     @ResponseBody
-    public List<Homework> findAllHomeworks() { return courseWebMapper.findAllHomeworks();}
+    public List<Homework> findAllHomeworks() throws JsonProcessingException { return courseWebMapper.findAllHomeworks();}
 
     @RequestMapping(value = "getCourseInformation")
     @ResponseBody
-    public List<CourseInformation> findCourseInformation() { return courseWebMapper.findCourseInformation();}
+    public List<CourseInformation> findCourseInformation() throws JsonProcessingException { return courseWebMapper.findCourseInformation();}
 
     @RequestMapping(value = "getCommentTitles")
     @ResponseBody
-    public List<String> findCommentTitles() { return courseWebMapper.findAllCommentTitle(); }
+    public List<String> findCommentTitles() throws JsonProcessingException {
+        List<String> src = courseWebMapper.findAllCommentTitle();
+        List<String> res = new ArrayList<>();
+        for (String s : src) {
+            if (!res.contains(s)) {
+                res.add(s);
+            }
+        }
+        return res;
+    }
 
     @RequestMapping(value = "getCommentByTitle")
     @ResponseBody
-    public List<Comment> findCommentByTitle(@RequestParam String title) {
-        logger.info(title);
-        return courseWebMapper.findAllCommentByTitle(title);
+    public List<Comment> findCommentByTitle(@RequestParam String title) throws JsonProcessingException {
+        List<Comment> res = courseWebMapper.findAllCommentByTitle(title);
+        logger.info(res.toString());
+        return res;
     }
 
     @PostMapping(value = "postUser")
     @ResponseBody
-    public boolean userLogin(@RequestBody User user) {
+    public boolean userLogin(@RequestBody User user) throws JsonProcessingException {
         logger.info(user.toString());
         List<User> userList = courseWebMapper.findAllUsers();
         return userList.contains(user);
@@ -188,22 +200,6 @@ public class CourseWebController {
         }
     }
 
-    @PostMapping(value = "deleteCommentByTitle")
-    @ResponseBody
-    public boolean deleteCommentByTitle(@RequestBody List<String> titles) {
-        logger.info(titles.toString());
-        courseWebMapper.deleteCommentByTitle(titles.get(0));
-        return true;
-    }
-
-    @PostMapping(value = "deleteComment")
-    @ResponseBody
-    public boolean deleteComment(@RequestBody Comment comment) {
-        logger.info(comment.toString());
-        courseWebMapper.deleteComment(comment);
-        return true;
-    }
-
     @PostMapping(value = "deleteNews")
     @ResponseBody
     public boolean deleteNews(@RequestBody List<String> titles) {
@@ -248,9 +244,25 @@ public class CourseWebController {
         return true;
     }
 
+    @PostMapping(value = "deleteCommentByTitle")
+    @ResponseBody
+     public boolean deleteCommentByTitle(@RequestBody List<String> titles) {
+        logger.info(titles.toString());
+        courseWebMapper.deleteCommentByTitle(titles.get(0));
+        return true;
+    }
+
+    @PostMapping(value = "deleteComment")
+    @ResponseBody
+    public boolean deleteComment(@RequestBody Comment comment) {
+        logger.info(comment.toString());
+        courseWebMapper.deleteComment(comment);
+        return true;
+    }
+
     @PostMapping(value = "updateScore")
     @ResponseBody
-    public boolean updateScore(@RequestBody Homework homework) {
+    public boolean updateScore(@RequestBody Homework homework) throws JsonProcessingException {
         logger.info(homework.toString());
         courseWebMapper.updateScore(homework);
         return true;

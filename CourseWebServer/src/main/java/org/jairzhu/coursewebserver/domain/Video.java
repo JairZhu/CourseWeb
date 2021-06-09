@@ -38,6 +38,12 @@ public class Video {
         this.time = time;
     }
 
+    public Video() {
+        this.title = null;
+        this.writer = null;
+        this.time = null;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

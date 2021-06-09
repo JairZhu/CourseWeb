@@ -36,31 +36,31 @@ export default {
     }
   },
   created() {
-    this.$http.get("http://localhost:8090/getPPTs").then(result => {
+    this.$http.get("http://47.101.58.148:8090/getPPTs").then(result => {
       this.$store.commit('setPPTs', result.data);
     });
-    this.$http.get("http://localhost:8090/getVideos").then(result => {
+    this.$http.get("http://47.101.58.148:8090/getVideos").then(result => {
       this.$store.commit('setVideos', result.data);
     });
-    this.$http.get("http://localhost:8090/getNews").then(result => {
+    this.$http.get("http://47.101.58.148:8090/getNews").then(result => {
       this.$store.commit('setNews', result.data);
     });
-    this.$http.get("http://localhost:8090/getNotifications").then(result => {
+    this.$http.get("http://47.101.58.148:8090/getNotifications").then(result => {
       this.$store.commit('setNotifications', result.data);
     });
-    this.$http.get("http://localhost:8090/getAssignments").then(result => {
+    this.$http.get("http://47.101.58.148:8090/getAssignments").then(result => {
       this.$store.commit('setAssignments', result.data);
     });
-    this.$http.get("http://localhost:8090/getHomeworks").then(result => {
+    this.$http.get("http://47.101.58.148:8090/getHomeworks").then(result => {
       this.$store.commit('setHomeworks', result.data);
     });
-    this.$http.get("http://localhost:8090/getCommentTitles").then(result => {
+    this.$http.get("http://47.101.58.148:8090/getCommentTitles").then(result => {
       this.$store.commit('setDiscussTitle', result.data);
     });
     this.$store.commit('setIsLogin', JSON.parse(localStorage.getItem("isLogin")));
     this.$store.commit('setTeacher', JSON.parse(localStorage.getItem("isTeacher")));
     this.$store.commit('setUser', JSON.parse(localStorage.getItem("user")));
-    this.$http.get("http://localhost:8090/getCourseInformation").then(result => {
+    this.$http.get("http://47.101.58.148:8090/getCourseInformation").then(result => {
       this.$store.commit('setCourseInformation', result.data[0]);
     });
   }
