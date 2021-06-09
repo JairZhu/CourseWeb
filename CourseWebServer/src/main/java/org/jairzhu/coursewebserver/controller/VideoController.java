@@ -131,7 +131,7 @@ public class VideoController {
         logger.info("videoPlay:"+fileName);
         String path = ResourceUtils.getURL("src/main/resources/static/video").getPath().substring(1);
         logger.info("video:src"+path);
-        String realPath = path + fileName;
+        String realPath = "/" + path + fileName;
 
         Path filePath = Paths.get(realPath);
 

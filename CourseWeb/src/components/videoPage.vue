@@ -1,29 +1,29 @@
 <template>
   <div>
   <el-row :gutter="10"  justify="space-around" style="margin-top: 30px">
-    <el-col :span="8" >
-      <el-card>
-        <div slot="header">
-          <i class="el-icon-document-copy"></i>
-          <span style="margin-left: 5px">视频浏览</span>
-          <span v-if="$store.state.isTeacher" style="float: right">
-              <el-button type="text" @click="editInfo('编辑视频', $store.state.videos)">编辑</el-button>
-            </span>
-        </div>
-
-        <div v-for="i in $store.state.videos" style="margin-bottom: 18px">
-          <i class="el-icon-tickets"></i>
-              <el-link type="primary" @click="changeVideo(i.title)">{{i.title}}</el-link>
-          <el-link type="text" :href="'http://47.101.58.148:8090/downloadFile/Video/'+ i.title">下载</el-link>
-        </div>
-      </el-card>
-    </el-col>
     <el-col :span="16" >
         <el-card >
           <video id="video" controls width="100%" height="100%">
             <source id="playVideosss" :src=this.videoSrc type="video/mp4">
           </video>
         </el-card>
+    </el-col>
+    <el-col :span="8" >
+      <el-card>
+        <div slot="header">
+          <i class="el-icon-document-copy"></i>
+          <span style="margin-left: 5px">视频浏览</span>
+          <span v-if="$store.state.isTeacher" style="float: right">
+              <el-button type="primary" icon="el-icon-edit" @click="editInfo('编辑视频', $store.state.videos)"></el-button>
+            </span>
+        </div>
+
+        <div v-for="i in $store.state.videos" style="margin-bottom: 18px">
+          <i class="el-icon-tickets"></i>
+          <el-link type="primary" @click="changeVideo(i.title)">{{i.title}}</el-link>
+          <el-button type="primary" icon="el-icon-download":href="'http://47.101.58.148:8090/downloadFile/Video/'+ i.title"></el-button>
+        </div>
+      </el-card>
     </el-col>
   </el-row>
   <el-drawer :title="variousDrawers.title" :visible.sync="variousDrawers.visible" :direction="'ltr'">
@@ -49,30 +49,30 @@
       </div>
     </div>
   </el-drawer>
-    <el-dialog :title="dialog.title" :visible.sync="dialog.visible" @close="dialog.isVideo = false" :before-close="handleClose">
-      <el-form :model="dialog.form" :rules="editDialogFormRules" ref="editDialogForm" label-width="80px">
-        <el-form-item label="标题" prop="title">
-          <el-input v-model="dialog.form.title" placeholder="请输入标题" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="时间" prop="time">
-          <el-date-picker v-model="dialog.form.time" type="datetime" placeholder="请选择日期时间"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="文件" v-if="dialog.isVideo">
-          <el-upload action="http://47.101.58.148:8090/uploadFile/video" :limit="10" :before-upload="handleVideoUpload">
-            <el-button size="small" type="primary">点击上传</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传最多单个个文件，且不超过2GB</div>
-          </el-upload>
-        </el-form-item>
-        <el-form-item label="内容" prop="content">
-          <el-input type="textarea" :rows="4" placeholder="请输入内容" v-model="dialog.form.content"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" style="text-align: right">
-        <el-button @click="dialog.visible = false">取 消</el-button>
-        <el-button @click="resetForm('editDialogForm')">重 置</el-button>
-        <el-button type="primary" @click="addInfo('editDialogForm', dialog)">添 加</el-button>
-      </div>
-    </el-dialog>
+  <el-dialog :title="dialog.title" :visible.sync="dialog.visible" @close="dialog.isVideo = false" :before-close="handleClose">
+    <el-form :model="dialog.form" :rules="editDialogFormRules" ref="editDialogForm" label-width="80px">
+      <el-form-item label="标题" prop="title">
+        <el-input v-model="dialog.form.title" placeholder="请输入标题" auto-complete="off"></el-input>
+      </el-form-item>
+      <el-form-item label="时间" prop="time">
+        <el-date-picker v-model="dialog.form.time" type="datetime" placeholder="请选择日期时间"></el-date-picker>
+      </el-form-item>
+      <el-form-item label="文件" v-if="dialog.isVideo">
+        <el-upload action="http://47.101.58.148:8090/uploadFile/video" :limit="10" :before-upload="handleVideoUpload">
+          <el-button size="small" type="primary">点击上传</el-button>
+          <div slot="tip" class="el-upload__tip">只能上传最多单个个文件，且不超过2GB</div>
+        </el-upload>
+      </el-form-item>
+      <el-form-item label="内容" prop="content">
+        <el-input type="textarea" :rows="4" placeholder="请输入内容" v-model="dialog.form.content"></el-input>
+      </el-form-item>
+    </el-form>
+    <div slot="footer" style="text-align: right">
+     <el-button @click="dialog.visible = false">取 消</el-button>
+      <el-button @click="resetForm('editDialogForm')">重 置</el-button>
+      <el-button type="primary" @click="addInfo('editDialogForm', dialog)">添 加</el-button>
+    </div>
+  </el-dialog>
   </div>
 </template>
 <script>

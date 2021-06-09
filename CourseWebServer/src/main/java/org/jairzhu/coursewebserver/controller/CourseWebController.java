@@ -13,6 +13,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -300,8 +301,14 @@ public class CourseWebController {
     public boolean uploadFile(@PathVariable(name="type")String type,@RequestParam("file") MultipartFile file) {
         String filename = file.getOriginalFilename();
         logger.info("uploadFile"+System.getProperty("user.dir")+filename);
+        String path = System.getProperty("user.dir") + "/src/main/resources/static/" + type;
+        File dir =new File(path);
+        if  (!dir.exists()  && !dir.isDirectory())
+        {
+            dir.mkdirs();
+        }
         try {
-            file.transferTo(new File(System.getProperty("user.dir") + "/src/main/resources/static/"+type, filename));
+            file.transferTo(new File(path, filename));
 
             return true;
         } catch (IOException e) {
@@ -314,7 +321,7 @@ public class CourseWebController {
     @ResponseBody
     public ResponseEntity<Object> downloadFile(@PathVariable(name = "fileName") String fileName, @PathVariable(name = "type") String type) throws FileNotFoundException {
         logger.info("download type: " + type + "  file: " + fileName);
-        String path = "src/main/resources/static/" + type;
+        String path = System.getProperty("user.dir") + "/src/main/resources/static/" + type;
         File file = new File(path, fileName);
         InputStreamResource resource = new InputStreamResource ( new FileInputStream( file ) );
 
