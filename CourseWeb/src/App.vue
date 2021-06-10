@@ -63,6 +63,9 @@ export default {
     this.$http.get("http://47.101.58.148:8090/getCourseInformation").then(result => {
       this.$store.commit('setCourseInformation', result.data[0]);
     });
+    if(this.$store.state.user != null){
+      this.$store.commit('setImgUrl', 'http://47.101.58.148:8090/photoPlay?userName='+this.$store.state.user.name+'.jpg');
+    }
   }
 }
 </script>
