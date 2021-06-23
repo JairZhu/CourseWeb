@@ -115,7 +115,13 @@ export default {
     }
 
   },
-
+  created: function () {
+    this.videoSrc='http://localhost:8090/videoPlay?fileName='+this.$store.state.videos[0].title;
+    let vdo = document.getElementById("video")
+    vdo.src=this.videoSrc;
+    vdo.oncanplay();
+    console.log("video:"+this.videoSrc);
+  },
   methods:{
     addInfo(formName, dialog) {
       dialog.form.writer = this.$store.state.user.name;
