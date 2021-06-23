@@ -9,9 +9,8 @@
           </div>
           <div>
             <div style="text-align: center">
-              <el-image class="headPhoto" v-if="$store.state.isTeacher" :src="imgUrl" :fit="'contain'" style="width: 100px; height: 100px;"></el-image>
-              <el-image class="headPhoto" v-else :src="imgUrl" :fit="'contain'" style="width: 100px; height: 100px;"></el-image><br>
-              <span>{{$store.state.user.name}}</span><br>
+              <el-image class="headPhoto" :src="$store.state.imgUrl" :fit="'contain'" style="width: 100px; height: 100px;"></el-image><br>
+              <!--              <span>{{$store.state.user.name}}</span><br>-->
               <el-button type="danger" @click="userLogout" style="margin-top: 10px" round>退出</el-button>
             </div>
           </div>
@@ -221,7 +220,7 @@ export default {
   name: "MainPage",
   data() {
     return {
-      imgUrl: 'http://47.101.58.148:8090/photoPlay?userName='+this.$store.state.user.name+'.jpg',
+      imgUrl: '',
       checkList: [],
       popoverVisible: false,
       homeworkDrawer: {

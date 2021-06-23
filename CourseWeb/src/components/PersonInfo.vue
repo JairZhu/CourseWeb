@@ -1,14 +1,14 @@
 <template>
   <div>
     <el-row type="flex" justify="space-around" style="margin-top: 30px">
-      <el-card class="box-card" align="middle">
+      <el-card v-if="$store.state.isLogin" class="box-card" align="middle">
         <div slot="header" class="clearfix" >
           <h2>用户中心</h2>
           <div class="demo-image" align="center">
 
             <el-image class="headPhoto"
                       style="width: 100px; height: 100px; "
-                      :src=this.photoSrc
+                      :src=this.$store.state.imgUrl
                       align="left"
 
             ></el-image>
@@ -50,6 +50,9 @@
 
 
       </el-card>
+      <el-card v-else class="box-card" align="middle">
+        <span>未登录</span>
+      </el-card>
     </el-row>
   </div>
 </template>
@@ -59,7 +62,6 @@ export default {
   name: "PersonInfo",
   data() {
     return {
-      photoSrc:'http://47.101.58.148:8090/photoPlay?userName='+this.$store.state.user.name+'.jpg',
       ruleForm: {
         name: this.$store.state.user.name,
         password: this.$store.state.user.password,

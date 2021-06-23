@@ -18,10 +18,14 @@ const store = new Vuex.Store({
     courseInformation: '',
     discussTitle: [],
     comments: [],
+    imgUrl: '',
   },
   mutations: {
     setDiscussTitle(state, item) {
       state.discussTitle = item;
+    },
+    setImgUrl(state, item){
+      state.imgUrl = item;
     },
     setComment(state, item) {
       state.comments = item;
